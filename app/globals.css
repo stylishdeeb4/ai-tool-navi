@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply text-gray-800 bg-white;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold leading-tight;
+  }
+}
+
+@layer components {
+  .prose-article h2 {
+    @apply text-2xl font-bold mt-10 mb-4 text-gray-900 border-l-4 border-blue-500 pl-4;
+  }
+  .prose-article h3 {
+    @apply text-xl font-bold mt-8 mb-3 text-gray-800;
+  }
+  .prose-article p {
+    @apply my-4 leading-relaxed text-gray-700;
+  }
+  .prose-article ul {
+    @apply my-4 pl-6 space-y-2;
+  }
+  .prose-article li {
+    @apply list-disc text-gray-700;
+  }
+  .prose-article a {
+    @apply text-blue-600 underline hover:text-blue-800;
+  }
+  .prose-article strong {
+    @apply font-bold text-gray-900;
+  }
+  .prose-article blockquote {
+    @apply border-l-4 border-blue-300 pl-4 my-6 text-gray-600 italic bg-blue-50 py-3 pr-4 rounded-r-lg;
+  }
+  .prose-article table {
+    @apply w-full my-6 border-collapse text-sm;
+  }
+  .prose-article th {
+    @apply bg-blue-600 text-white px-4 py-2 text-left font-semibold;
+  }
+  .prose-article td {
+    @apply border border-gray-200 px-4 py-2;
+  }
+  .prose-article tr:nth-child(even) td {
+    @apply bg-gray-50;
+  }
+}
