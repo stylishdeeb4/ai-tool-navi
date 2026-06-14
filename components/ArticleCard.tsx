@@ -18,14 +18,19 @@ interface Props {
 export default function ArticleCard({ post, featured = false }: Props) {
   const colorClass = categoryColors[post.category] || 'bg-gray-100 text-gray-700'
 
+  const coverSrc = post.image
+    ? post.image
+    : `/api/og?title=${encodeURIComponent(post.title)}&category=${encodeURIComponent(post.category)}`
+
   return (
     <article className={`bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden group ${featured ? 'md:flex' : ''}`}>
-      {/* Thumbnail placeholder */}
-      <div className={`bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-4xl ${featured ? 'md:w-64 md:flex-shrink-0 h-48 md:h-auto' : 'h-40'}`}>
-        {post.category === 'ChatGPT' ? '💬' :
-         post.category === 'Claude' ? '🤖' :
-         post.category === '画像生成AI' ? '🎨' :
-         post.category === 'AI動画' ? '🎬' : '⚡'}
+      <div className={`relative overflow-hidden ${featured ? 'md:w-64 md:flex-shrink-0 h-48 md:h-auto' : 'h-44'}`}>
+        <img
+          src={coverSrc}
+          alt={post.title}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          loading="lazy"
+        />
       </div>
 
       <div className="p-5">
