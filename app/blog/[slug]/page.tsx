@@ -18,6 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = getPost(params.slug)
   if (!post) return {}
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://ai-tool-navi.vercel.app'
+  const ogImage = post.image || `${SITE_URL}/api/og?title=${encodeURIComponent(post.title)}&category=${encodeURIComponent(post.category)}`
   return {
     title: post.title,
     description: post.description,
@@ -28,11 +29,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: 'article',
       publishedTime: post.date,
       url: `${SITE_URL}/blog/${post.slug}`,
+      images: [{ url: ogImage, width: 1200, height: 630, alt: post.title }],
     },
     twitter: {
       card: 'summary_large_image',
       title: post.title,
       description: post.description,
+      images: [ogImage],
     },
     alternates: { canonical: `${SITE_URL}/blog/${post.slug}` },
   }
@@ -41,6 +44,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ArticlePage({ params }: Props) {
   const post = getPost(params.slug)
   if (!post) notFound()
+
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://ai-tool-navi.vercel.app'
+  const coverImage = post.image || `/api/og?title=${encodeURIComponent(post.title)}&category=${encodeURIComponent(post.category)}`
 
   const contentHtml = await markdownToHtml(post.content)
   const allPosts = getAllPosts()
@@ -54,6 +60,7 @@ export default async function ArticlePage({ params }: Props) {
     headline: post.title,
     description: post.description,
     datePublished: post.date,
+    image: post.image || `${SITE_URL}/api/og?title=${encodeURIComponent(post.title)}&category=${encodeURIComponent(post.category)}`,
     author: { '@type': 'Organization', name: 'AIツールナビ' },
     publisher: { '@type': 'Organization', name: 'AIツールナビ' },
   }
@@ -63,9 +70,7 @@ export default async function ArticlePage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <div className="lg:flex gap-8">
-        {/* Main content */}
         <article className="flex-1 min-w-0">
-          {/* Breadcrumb */}
           <nav className="text-xs text-gray-400 mb-4 flex items-center gap-1">
             <Link href="/" className="hover:text-blue-500">ホーム</Link>
             <span>/</span>
@@ -74,7 +79,6 @@ export default async function ArticlePage({ params }: Props) {
             <span className="text-gray-600 truncate">{post.title}</span>
           </nav>
 
-          {/* Category badge */}
           <div className="mb-3">
             <Link href={`/category/${post.category}`}
               className="text-xs font-medium bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full hover:bg-blue-200 transition-colors">
@@ -89,16 +93,14 @@ export default async function ArticlePage({ params }: Props) {
             {post.readingTime && <span>読了時間：約{post.readingTime}分</span>}
           </div>
 
-          {/* Ad - article top */}
+          <div className="mb-8 rounded-xl overflow-hidden shadow-sm">
+            <img src={coverImage} alt={post.title} className="w-full h-64 object-cover" />
+          </div>
+
           <AdBanner slot="ARTICLE_TOP" format="horizontal" className="mb-8" />
 
-          {/* Article body */}
-          <div
-            className="prose-article"
-            dangerouslySetInnerHTML={{ __html: contentHtml }}
-          />
+          <div className="prose-article" dangerouslySetInnerHTML={{ __html: contentHtml }} />
 
-          {/* Tags */}
           {post.tags.length > 0 && (
             <div className="mt-8 pt-6 border-t border-gray-100">
               <div className="flex flex-wrap gap-2">
@@ -109,15 +111,12 @@ export default async function ArticlePage({ params }: Props) {
             </div>
           )}
 
-          {/* Ad - article bottom */}
           <AdBanner slot="ARTICLE_BOTTOM" format="rectangle" className="mt-8" />
         </article>
 
-        {/* Sidebar */}
         <aside className="w-full lg:w-72 flex-shrink-0">
           <div className="sticky top-20">
             <AdBanner slot="SIDEBAR" format="rectangle" className="mb-6" />
-
             {related.length > 0 && (
               <div>
                 <h3 className="font-bold text-gray-800 mb-3 text-sm">関連記事</h3>
@@ -136,7 +135,6 @@ export default async function ArticlePage({ params }: Props) {
         </aside>
       </div>
 
-      {/* Related articles grid */}
       {related.length > 0 && (
         <section className="mt-12">
           <h2 className="text-lg font-bold text-gray-800 mb-4">同じカテゴリの記事</h2>
@@ -147,4 +145,4 @@ export default async function ArticlePage({ params }: Props) {
       )}
     </div>
   )
-}
+               }
