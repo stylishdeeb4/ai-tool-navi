@@ -40,13 +40,13 @@ export const metadata: Metadata = {h
     follow: true,
     googleBot: { index: true, follow: true, 'max-image-preview': 'large' },
   },
-  alternates: { canonical: SITE_URL },  verification: {    google: 'wgdvmt549w0GBjuMigyXvLxHYnCaSZh2EhWxiB1QJrk',  },
+  alternates: { canonical: SITE_URL },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ja">
-      <head>
+      <head><meta name="google-site-verification" content="wgdvmt549w0GBjuMigyXvLxHYnCaSZh2EhWxiB1QJrk" />
         {ADSENSE_ID && (
           <Script
             async
