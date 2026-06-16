@@ -11,7 +11,7 @@ const SITE_NAME = 'AIツールナビ'
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://ai-tool-navi.vercel.app'
 const ADSENSE_ID = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID
 
-export const metadata: Metadata = {
+export const metadata: Metadata = {h
   metadataBase: new URL(SITE_URL),
   title: {
     default: `${SITE_NAME} | 最新AIツールの使い方・比較・レビュー`,
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true, 'max-image-preview': 'large' },
   },
-  alternates: { canonical: SITE_URL },
+  alternates: { canonical: SITE_URL },  verification: {    google: 'wgdvmt549w0GBjuMigyXvLxHYnCaSZh2EhWxiB1QJrk',  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
