@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
           </div>
         </div>
         <div style={{ height:64, display:'flex', alignItems:'center', padding:'0 72px', background:`${cfg.color}18`, borderTop:`1px solid ${cfg.color}30` }}>
-          <span style={{ color: cfg.accent, fontSize:15, fontWeight:600, opacity:0.8 }}>ai-tool-navi.vercel.app</span>
+          <span style={{ color: cfg.accent, fontSize:15, fontWeight:600, opacity:0.8 }}>hukugyou.blog</span>
         </div>
       </div>
     ),

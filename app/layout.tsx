@@ -8,7 +8,7 @@ import Script from 'next/script'
 const inter = Inter({ subsets: ['latin'] })
 
 const SITE_NAME = 'AIツールナビ'
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://ai-tool-navi.vercel.app'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://hukugyou.blog'
 const ADSENSE_ID = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID
 
 export const metadata: Metadata = {

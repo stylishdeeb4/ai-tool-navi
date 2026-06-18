@@ -1,7 +1,7 @@
 import { getAllPosts } from '@/lib/posts'
 import type { MetadataRoute } from 'next'
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://ai-tool-navi.vercel.app'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://hukugyou.blog'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getAllPosts()
