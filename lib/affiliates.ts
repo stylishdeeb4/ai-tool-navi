@@ -96,6 +96,38 @@ export const affiliates: Record<string, AffiliateOffer> = {
     note: '※まずは無料体験から試せます',
     url: '', // ← TechAcademy のリンクを貼る
   },
+  // 優先度S：高単価スクール・講座
+  daitra: {
+    eyebrow: 'おすすめスキルスクール',
+    name: 'デイトラ',
+    catch: 'Web制作・動画編集・ライティングなどを実践形式で学べる人気オンラインスクール。買い切り価格で副業直結のスキルが身につきます。',
+    button: 'デイトラのコースを見る',
+    note: '※学んだスキルがそのまま副業の武器になります',
+    url: '', // ← デイトラのリンクを貼る
+  },
+  shiftai: {
+    eyebrow: 'おすすめAIスクール・コミュニティ',
+    name: 'SHIFT AI',
+    catch: '生成AIの活用法を体系的に学び、副業・ビジネスに活かせるAI特化のスクール／コミュニティです。',
+    button: 'SHIFT AIの無料セミナーを見る',
+    note: '※まずは無料セミナーから',
+    url: '', // ← SHIFT AI のリンクを貼る
+  },
+  studio_us: {
+    eyebrow: 'おすすめ動画編集スクール',
+    name: 'studio US（スタジオアス）',
+    catch: '動画編集を未経験から学べるオンラインスクール。案件獲得まで見据えたカリキュラムで、YouTube副業の本格化に。',
+    button: 'studio USを見てみる',
+    url: '', // ← studio US のリンクを貼る
+  },
+  writing_hacks: {
+    eyebrow: 'おすすめライティング講座',
+    name: 'Writing Hacks（ライティングハックス）',
+    catch: 'プロのWebライターが教える買い切り型のライティング講座。SEOライティングや単価アップのノウハウを体系的に学べます。',
+    button: 'Writing Hacksを見てみる',
+    note: '※単価アップを本気で目指す方向け',
+    url: '', // ← Writing Hacks のリンクを貼る
+  },
 }
 
 /**
