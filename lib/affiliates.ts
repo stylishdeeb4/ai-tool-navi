@@ -62,6 +62,40 @@ export const affiliates: Record<string, AffiliateOffer> = {
     note: '※クラウドワークスと併用すると案件の幅が広がります',
     url: '', // ← ランサーズのリンクを貼る
   },
+  // WordPressテーマ（ブログのデザイン・収益化を底上げ）
+  swell: {
+    eyebrow: 'おすすめWordPressテーマ',
+    name: 'SWELL',
+    catch: '国内で人気No.1クラスの有料テーマ。設定が簡単で表示も速く、収益化に必要な機能が最初から揃っています。',
+    button: 'SWELLを見てみる',
+    note: '※買い切り型。複数ブログに使い回せます',
+    url: '', // ← SWELL（インフォトップ等）のリンクを貼る
+  },
+  // デザインツール（動画・画像制作の効率化）
+  canva: {
+    eyebrow: 'おすすめデザインツール',
+    name: 'Canva Pro',
+    catch: 'テンプレ豊富で、ショート動画やSNS画像が誰でも数分で作れます。素材使い放題で制作スピードが段違い。',
+    button: 'Canva Proを無料で試す',
+    note: '※無料トライアルあり',
+    url: '', // ← Canva Pro のリンクを貼る
+  },
+  adobe: {
+    eyebrow: 'プロ向けクリエイティブツール',
+    name: 'Adobe Creative Cloud',
+    catch: '画像はPhotoshop、動画はPremiere Pro。本格的に制作・販売を伸ばすなら定番のクリエイティブ環境です。',
+    button: 'Adobe Creative Cloudを見る',
+    url: '', // ← Adobe CC のリンクを貼る
+  },
+  // スクール（学んで稼ぐ層・高単価）
+  techacademy: {
+    eyebrow: 'おすすめオンラインスクール',
+    name: 'TechAcademy（テックアカデミー）',
+    catch: 'プログラミングやWebスキルを未経験から学べるオンラインスクール。副業・案件獲得サポートも充実しています。',
+    button: '無料体験・資料請求する',
+    note: '※まずは無料体験から試せます',
+    url: '', // ← TechAcademy のリンクを貼る
+  },
 }
 
 /**
