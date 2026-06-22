@@ -60,9 +60,11 @@ export default async function ArticlePage({ params }: Props) {
     headline: post.title,
     description: post.description,
     datePublished: post.date,
+    dateModified: post.date,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}/blog/${post.slug}` },
     image: post.image || `${SITE_URL}/api/og?title=${encodeURIComponent(post.title)}&category=${encodeURIComponent(post.category)}`,
-    author: { '@type': 'Organization', name: 'AIツールナビ' },
-    publisher: { '@type': 'Organization', name: 'AIツールナビ' },
+    author: { '@type': 'Organization', name: 'AIツールナビ編集部', url: `${SITE_URL}/about` },
+    publisher: { '@type': 'Organization', name: 'AIツールナビ', url: SITE_URL },
   }
 
   return (
@@ -88,8 +90,12 @@ export default async function ArticlePage({ params }: Props) {
 
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 leading-tight">{post.title}</h1>
 
-          <div className="flex items-center gap-4 text-xs text-gray-400 mb-6 pb-4 border-b border-gray-100">
-            <time>{new Date(post.date).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-400 mb-6 pb-4 border-b border-gray-100">
+            <Link href="/about" className="flex items-center gap-1.5 hover:text-blue-500">
+              <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-600 text-[10px] font-bold">AI</span>
+              <span className="text-gray-600">AIツールナビ編集部</span>
+            </Link>
+            <time dateTime={post.date}>公開：{new Date(post.date).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
             {post.readingTime && <span>読了時間：約{post.readingTime}分</span>}
           </div>
 
