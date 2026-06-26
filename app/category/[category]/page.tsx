@@ -2,19 +2,14 @@ import { getAllPosts } from '@/lib/posts'
 import ArticleCard from '@/components/ArticleCard'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import { slugToName, categories } from '@/lib/categories'
 
-const categoryMap: Record<string, string> = {
-  chatgpt: 'ChatGPT',
-  claude: 'Claude',
-  'image-ai': '画像生成AI',
-  'video-ai': 'AI動画',
-  review: '比較・レビュー',
-}
+const categoryMap = slugToName
 
 interface Props { params: { category: string } }
 
 export async function generateStaticParams() {
-  return Object.keys(categoryMap).map(category => ({ category }))
+  return categories.map(c => ({ category: c.slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

@@ -7,6 +7,7 @@ const categories = [
   { name: 'Claude', href: '/category/claude' },
   { name: '画像生成AI', href: '/category/image-ai' },
   { name: 'AI動画', href: '/category/video-ai' },
+  { name: '副業・収益化', href: '/category/fukugyo' },
   { name: '比較・レビュー', href: '/category/review' },
 ]
 

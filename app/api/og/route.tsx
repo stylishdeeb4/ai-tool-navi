@@ -9,6 +9,7 @@ const categoryConfig: Record<string, { color: string; bg: string; emoji: string;
   '画像生成AI':     { color: '#a855f7', bg: '#1a0533', emoji: '🎨', accent: '#c084fc' },
   'AI動画':         { color: '#ef4444', bg: '#1c0505', emoji: '🎬', accent: '#f87171' },
   '比較・レビュー': { color: '#3b82f6', bg: '#020d1f', emoji: '⚡', accent: '#60a5fa' },
+  '副業・収益化':   { color: '#10b981', bg: '#052e16', emoji: '💰', accent: '#34d399' },
 }
 
 export async function GET(req: NextRequest) {

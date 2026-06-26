@@ -5,6 +5,7 @@ import Link from 'next/link'
 import ArticleCard from '@/components/ArticleCard'
 import AdBanner from '@/components/AdBanner'
 import { markdownToHtml } from '@/lib/markdown'
+import { categoryHref } from '@/lib/categories'
 
 interface Props {
   params: { slug: string }
@@ -82,7 +83,7 @@ export default async function ArticlePage({ params }: Props) {
           </nav>
 
           <div className="mb-3">
-            <Link href={`/category/${post.category}`}
+            <Link href={categoryHref(post.category)}
               className="text-xs font-medium bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full hover:bg-blue-200 transition-colors">
               {post.category}
             </Link>
