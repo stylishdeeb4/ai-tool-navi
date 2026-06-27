@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 const SITE_NAME = 'AIツールナビ'
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://hukugyou.blog'
-const ADSENSE_ID = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID
+const ADSENSE_ID = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || 'ca-pub-8669480770000631'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
