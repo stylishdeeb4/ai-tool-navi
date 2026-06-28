@@ -45,6 +45,14 @@ export const affiliates: Record<string, AffiliateOffer> = {
     note: '※迷ったらこの2社のどちらかで間違いありません',
     url: 'https://px.a8.net/svt/ejp?a8mat=4B62OE+FKUCMQ+CO4+61C2Q',
   },
+  mixhost: {
+    eyebrow: 'おすすめレンタルサーバー',
+    name: 'mixhost（ミックスホスト）',
+    catch: '高速表示に定評があるWordPress向けサーバー。WordPressクイックスタートで申し込みと同時にブログを開設できます。',
+    button: 'mixhostを見てみる',
+    note: '※表示速度を重視する方に人気です',
+    url: 'https://px.a8.net/svt/ejp?a8mat=3HQV6B+3KMEQ+3JTE+5YJRM',
+  },
   // クラウドソーシング（ライティング副業の案件獲得）
   crowdworks: {
     eyebrow: 'おすすめクラウドソーシング',
