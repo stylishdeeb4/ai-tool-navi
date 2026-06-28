@@ -1,6 +1,7 @@
 import { getAllPosts } from '@/lib/posts'
 import ArticleCard from '@/components/ArticleCard'
 import AdBanner from '@/components/AdBanner'
+import AffiliatePicks from '@/components/AffiliatePicks'
 import Link from 'next/link'
 
 export default function Home() {
@@ -71,6 +72,9 @@ export default function Home() {
           </div>
         </section>
       )}
+
+      {/* Affiliate picks */}
+      <AffiliatePicks />
 
       {/* Ad - bottom */}
       <AdBanner slot="BOTTOM_BANNER" format="rectangle" className="mt-8" />
