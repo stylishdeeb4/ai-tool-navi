@@ -148,11 +148,14 @@ export const affiliates: Record<string, AffiliateOffer> = {
 
 /**
  * アフィリエイトボックスのHTMLを生成する。
- * url が未設定の場合は「準備中」のプレースホルダーを返す（リンク切れ防止）。
+ * url が未設定の場合、本番では何も描画しない（未完成な「準備中」表示を訪問者に見せない）。
+ * 開発時のみ目印として準備中ボックスを表示する。
  */
 export function renderAffiliateBox(key: string): string {
   const o = affiliates[key]
   if (!o) return ''
+  // 実リンク未設定：本番は非表示、開発時のみプレースホルダー
+  if (!o.url && process.env.NODE_ENV === 'production') return ''
 
   const eyebrow = `<div style="font-size:12px;font-weight:700;color:#0ea5e9;letter-spacing:.04em;margin-bottom:6px;">${o.eyebrow}</div>`
   const name = `<div style="font-size:18px;font-weight:800;color:#0f172a;margin-bottom:8px;">${o.name}</div>`
