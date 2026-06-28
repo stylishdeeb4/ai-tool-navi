@@ -43,7 +43,7 @@ export const affiliates: Record<string, AffiliateOffer> = {
     catch: '国内シェアトップクラスの安定性。WordPressクイックスタートで簡単に始められます。',
     button: 'エックスサーバーを見てみる',
     note: '※迷ったらこの2社のどちらかで間違いありません',
-    url: '', // ← エックスサーバーのリンクを貼る
+    url: 'https://px.a8.net/svt/ejp?a8mat=4B62OE+FKUCMQ+CO4+61C2Q',
   },
   // クラウドソーシング（ライティング副業の案件獲得）
   crowdworks: {
@@ -62,14 +62,22 @@ export const affiliates: Record<string, AffiliateOffer> = {
     note: '※クラウドワークスと併用すると案件の幅が広がります',
     url: '', // ← ランサーズのリンクを貼る
   },
+  coconala: {
+    eyebrow: 'おすすめスキルマーケット',
+    name: 'ココナラ',
+    catch: '自分の得意（ライティング・デザイン・相談など）を出品して売れる国内最大級のスキルマーケット。在宅・スキマ時間で始められます。',
+    button: 'ココナラに無料登録',
+    note: '※登録・出品は無料。AIで作った成果物の販売にも',
+    url: 'https://px.a8.net/svt/ejp?a8mat=453CBX+3K07UA+2PEO+OE4NM',
+  },
   // WordPressテーマ（ブログのデザイン・収益化を底上げ）
-  swell: {
+  stork19: {
     eyebrow: 'おすすめWordPressテーマ',
-    name: 'SWELL',
-    catch: '国内で人気No.1クラスの有料テーマ。設定が簡単で表示も速く、収益化に必要な機能が最初から揃っています。',
-    button: 'SWELLを見てみる',
-    note: '※買い切り型。複数ブログに使い回せます',
-    url: '', // ← SWELL（インフォトップ等）のリンクを貼る
+    name: 'STORK19',
+    catch: '「ブログマーケッターJUNICHI」監修の国産WordPressテーマ。モバイル表示にこだわった設計で、初心者でも整ったデザインのブログがすぐ作れます。',
+    button: 'STORK19を見てみる',
+    note: '※買い切り型。表示の見やすさに定評があります',
+    url: 'https://px.a8.net/svt/ejp?a8mat=4B62OE+FNTINM+3PSE+63WO2',
   },
   // デザインツール（動画・画像制作の効率化）
   canva: {
