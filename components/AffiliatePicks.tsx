@@ -3,14 +3,22 @@ import { affiliates } from '@/lib/affiliates'
 // トップページ用：実リンクが設定済みのアフィリ案件だけをカードで表示する。
 // url未設定の案件は出さないので、提携が増えるほど自動で充実する。
 interface Props {
-  // 表示する案件キーの順序。省略時は設定順で「url済み」のものを全部出す。
+  // 表示する案件を限定する。指定したキーだけを、この順序で出す。
   keys?: string[]
+  // 先頭に出したい案件。指定外の「url済み」案件は、そのあとに設定順で続く。
+  // （提携が増えたときに自動で載る挙動を保ったまま、並び順だけ制御したい場合に使う）
+  priority?: string[]
   title?: string
   limit?: number
 }
 
-export default function AffiliatePicks({ keys, title = '副業・ブログ開設におすすめのサービス', limit }: Props) {
-  const order = keys && keys.length ? keys : Object.keys(affiliates)
+export default function AffiliatePicks({ keys, priority, title = '副業・ブログ開設におすすめのサービス', limit }: Props) {
+  const all = Object.keys(affiliates)
+  const order = keys && keys.length
+    ? keys
+    : priority && priority.length
+      ? [...priority.filter(k => all.includes(k)), ...all.filter(k => !priority.includes(k))]
+      : all
   let picks = order
     .map(k => ({ key: k, offer: affiliates[k] }))
     .filter(x => x.offer && x.offer.url)

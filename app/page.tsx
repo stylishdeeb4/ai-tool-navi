@@ -73,8 +73,8 @@ export default function Home() {
         </section>
       )}
 
-      {/* Affiliate picks */}
-      <AffiliatePicks />
+      {/* Affiliate picks（登録ハードルが低い順に並べる） */}
+      <AffiliatePicks priority={['coconala']} />
 
       {/* Ad - bottom */}
       <AdBanner slot="BOTTOM_BANNER" format="rectangle" className="mt-8" />

@@ -1,5 +1,6 @@
 import { getAllPosts } from '@/lib/posts'
 import ArticleCard from '@/components/ArticleCard'
+import AffiliatePicks from '@/components/AffiliatePicks'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { slugToName, categories } from '@/lib/categories'
@@ -37,6 +38,16 @@ export default function CategoryPage({ params }: Props) {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {posts.map(post => <ArticleCard key={post.slug} post={post} />)}
+        </div>
+      )}
+
+      {/* 副業カテゴリは「始める場所」を探しに来た読者が多いため、登録無料の案件を下に置く */}
+      {params.category === 'fukugyo' && (
+        <div className="mt-12">
+          <AffiliatePicks
+            keys={['coconala', 'crowdworks', 'lancers', 'xserver']}
+            title="副業を始めるならこのサービスから"
+          />
         </div>
       )}
     </div>
