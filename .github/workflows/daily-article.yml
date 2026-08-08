@@ -1,9 +1,27 @@
-name: 毎日自動記事生成
+name: 記事の自動生成
 
+# 毎日 09:00 JST（= 00:00 UTC）に1本生成して公開する。
+# 手動実行では、書きたいテーマの slug を指定したり、生成せずに
+# 「次に書かれるテーマ」を確認したりできる（Actionsタブ → Run workflow）。
 on:
   schedule:
     - cron: '0 0 * * *'
   workflow_dispatch:
+    inputs:
+      slug:
+        description: 'テーマを指定する場合は scripts/generate-article.py の TOPICS にある slug（空なら次の未執筆テーマ）'
+        required: false
+        type: string
+      dry_run:
+        description: '生成せず、次に書かれるテーマだけ確認する'
+        required: false
+        type: boolean
+        default: false
+
+# 生成が重なって push が競合しないように直列化する
+concurrency:
+  group: daily-article
+  cancel-in-progress: false
 
 jobs:
   generate-article:
@@ -21,17 +39,36 @@ jobs:
           python-version: '3.11'
 
       - name: 依存パッケージをインストール
-        run: pip install anthropic
+        run: pip install -U anthropic
 
-      - name: 記事を自動生成
+      # 入力は env 経由で渡す（run に直接展開するとシェルに解釈される）
+      - name: 記事を生成
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: python scripts/generate-article.py
+          INPUT_SLUG: ${{ inputs.slug }}
+          INPUT_DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          args=()
+          [ -n "$INPUT_SLUG" ] && args+=(--slug "$INPUT_SLUG")
+          [ "$INPUT_DRY_RUN" = "true" ] && args+=(--dry-run)
+          python scripts/generate-article.py "${args[@]}"
+
+      - name: 記事の整合性をチェック
+        run: python scripts/validate-posts.py
 
       - name: 生成した記事をコミット
         run: |
           git config --global user.name "AIツールナビ Bot"
           git config --global user.email "bot@ai-tool-navi.vercel.app"
           git add content/posts/
-          git diff --staged --quiet || git commit -m "🤖 自動生成記事: $(date '+%Y-%m-%d')"
-          git push
+          if git diff --staged --quiet; then
+            echo "新しい記事はありません"
+            exit 0
+          fi
+          git commit -m "🤖 自動生成記事: $(date '+%Y-%m-%d')"
+          for i in 1 2 3 4; do
+            git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            sleep $((2 ** i))
+          done
+          echo "push に失敗しました"
+          exit 1
