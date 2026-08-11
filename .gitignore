@@ -1,9 +1,12 @@
 # dependencies
 /node_modules
+comingbird/node_modules
 
 # next.js
 /.next/
 /out/
+comingbird/.next/
+comingbird/out/
 
 # production
 /build

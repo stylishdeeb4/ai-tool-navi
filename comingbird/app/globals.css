@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * デザイントークン。実物サイトの配色が判明したら、まずここだけを書き換える。
+ * 値は Tailwind が rgb(var(--x) / <alpha-value>) で読むため空白区切りのRGB。
+ */
+:root {
+  --cb-bg: 11 15 20;
+  --cb-surface: 20 26 33;
+  --cb-raised: 29 37 46;
+  --cb-border: 44 55 66;
+  --cb-text: 233 238 243;
+  --cb-muted: 148 163 178;
+  --cb-accent: 56 189 248;
+  --cb-accent-strong: 2 132 199;
+  --cb-gold: 250 204 21;
+  --cb-silver: 203 213 225;
+  --cb-bronze: 205 133 76;
+
+  /* Google Fonts はビルド時に外部取得が必要なため、意図的にシステムフォント構成 */
+  --cb-font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-cb-bg text-cb-text antialiased;
+    font-family: var(--cb-font-sans);
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-bold leading-tight;
+  }
+  a {
+    @apply transition-colors;
+  }
+}
+
+@layer components {
+  .cb-shell {
+    @apply mx-auto w-full max-w-shell px-4;
+  }
+  .cb-card {
+    @apply rounded-xl border border-cb-border bg-cb-surface;
+  }
+  .cb-chip {
+    @apply inline-flex items-center rounded-full border border-cb-border bg-cb-raised px-2.5 py-0.5 text-xs text-cb-muted;
+  }
+  .cb-field {
+    @apply w-full rounded-lg border border-cb-border bg-cb-raised px-3 py-2 text-sm text-cb-text
+      placeholder:text-cb-muted focus:border-cb-accent focus:outline-none focus:ring-1 focus:ring-cb-accent;
+  }
+  .cb-btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-cb-accent-strong px-4 py-2
+      text-sm font-semibold text-white hover:brightness-110 disabled:opacity-50;
+  }
+  .cb-btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-cb-border bg-cb-raised
+      px-4 py-2 text-sm font-semibold text-cb-text hover:border-cb-accent;
+  }
+  /* サムネイル未取得時のプレースホルダ（外部画像を一切読まない） */
+  .cb-thumb {
+    background-image: linear-gradient(
+      135deg,
+      hsl(var(--thumb-h) 55% 26%) 0%,
+      hsl(calc(var(--thumb-h) + 40) 60% 14%) 100%
+    );
+  }
+}
