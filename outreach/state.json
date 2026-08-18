@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-18T22:40:49.882Z",
+  "updatedAt": "2026-08-18T22:42:59.500Z",
   "prospects": {
     "P002": {
-      "status": "draft",
+      "status": "pending",
       "history": [
         {
           "at": "2026-08-18T22:40:49.881Z",
@@ -11,10 +11,18 @@
           "from": "draft",
           "to": "draft",
           "hash": "738f0e001407"
+        },
+        {
+          "at": "2026-08-18T22:42:59.500Z",
+          "action": "submitted",
+          "from": "draft",
+          "to": "pending",
+          "hash": "cc6723c1854f",
+          "by": null
         }
       ],
       "notes": [],
-      "draftHash": "738f0e0014071eb54ddf96f3bccff96633fedfcd56db2c06fb6e99be138c6485"
+      "draftHash": "cc6723c1854fa329b9136cecd26a2fc32177e9aae3e9033b62861e27ac58ac85"
     }
   }
 }
