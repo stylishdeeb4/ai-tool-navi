@@ -1,0 +1,193 @@
+{
+  "_readme": [
+    "提携アウトリーチのプロスペクト台帳。lib/affiliates.ts で url が空（＝未提携）のプログラムに対応します。",
+    "company / site / contact が空のものは『未確認』です。送付前に必ず公式サイトで確認して埋めてください。",
+    "推測で埋めないこと。verify コマンドが未確認のものを警告します。",
+    "id は変更しないでください（state.json・監査ログが id で紐づいています）。"
+  ],
+  "version": 1,
+  "prospects": [
+    {
+      "id": "P001",
+      "name": "ConoHa WING",
+      "company": "GMOインターネットグループ株式会社",
+      "site": "https://www.conoha.jp/",
+      "category": "レンタルサーバー",
+      "affiliateKey": "conoha",
+      "channel": "asp",
+      "aspHint": "A8.net（候補・要確認）",
+      "payoutTier": "high",
+      "contact": { "type": "asp-program", "url": "", "note": "ASP内のプログラム検索から提携申請。直接連絡先は未確認" },
+      "fit": "ブログ副業系の記事でサーバーを紹介済み（エックスサーバー／mixhost）。3社目の選択肢として比較表に追加できる。単価が高くブログ開設層と相性が良い。",
+      "asks": [
+        "提携審査のご承認",
+        "掲載時の表記ルール・使用可能なバナー素材のご共有",
+        "紹介実績に応じた特別単価のご相談"
+      ],
+      "notes": "掲載枠（{{AFF:conoha}}）は未設置。提携後に ai-blog-fukugyo-hajimekata へ追加する。"
+    },
+    {
+      "id": "P002",
+      "name": "クラウドワークス",
+      "company": "株式会社クラウドワークス",
+      "site": "https://crowdworks.jp/",
+      "category": "クラウドソーシング",
+      "affiliateKey": "crowdworks",
+      "channel": "asp",
+      "aspHint": "A8.net / もしもアフィリエイト（候補・要確認）",
+      "payoutTier": "low",
+      "contact": { "type": "asp-program", "url": "", "note": "ASP内のプログラム検索から提携申請。直接連絡先は未確認" },
+      "fit": "AI副業・AIライティング系の記事が主力で、案件獲得先として自然に紹介できる。掲載枠が4記事分すでに用意済みで、提携が通れば即日反映できる。無料登録型のため読者側のハードルも低い。",
+      "asks": [
+        "提携審査のご承認",
+        "掲載時の表記ルール（サービス名・実績数値の記載可否）のご共有",
+        "AI活用・副業テーマでの記事タイアップの可否"
+      ],
+      "notes": "台帳内で最も掲載枠が多い。単価は低いが成約率が見込めるため優先度は高い。"
+    },
+    {
+      "id": "P003",
+      "name": "ランサーズ",
+      "company": "ランサーズ株式会社",
+      "site": "https://www.lancers.jp/",
+      "category": "クラウドソーシング",
+      "affiliateKey": "lancers",
+      "channel": "asp",
+      "aspHint": "A8.net / もしもアフィリエイト（候補・要確認）",
+      "payoutTier": "low",
+      "contact": { "type": "asp-program", "url": "", "note": "ASP内のプログラム検索から提携申請。直接連絡先は未確認" },
+      "fit": "クラウドワークスと併用を勧める文脈で紹介済み。単価アップ系の記事に掲載枠がある。",
+      "asks": [
+        "提携審査のご承認",
+        "掲載時の表記ルールのご共有"
+      ],
+      "notes": "P002 とセットで申請すると比較記事の説得力が上がる。"
+    },
+    {
+      "id": "P004",
+      "name": "Canva Pro",
+      "company": "",
+      "site": "https://www.canva.com/",
+      "category": "デザインツール",
+      "affiliateKey": "canva",
+      "channel": "direct",
+      "aspHint": "公式アフィリエイトプログラム（要確認）",
+      "payoutTier": "mid",
+      "contact": { "type": "unknown", "url": "", "note": "公式サイトのアフィリエイト／パートナーページを要確認" },
+      "fit": "AI動画・画像制作の記事で制作ツールとして紹介済み。ショート動画副業の文脈と噛み合い、無料トライアルがあるため読者に勧めやすい。",
+      "asks": [
+        "アフィリエイトプログラムへの参加可否",
+        "日本語圏のメディア向けプログラムの有無",
+        "掲載時のブランドガイドラインのご共有"
+      ],
+      "notes": "運営会社の正式名称・申込窓口が未確認。送付前に公式サイトで確認すること。"
+    },
+    {
+      "id": "P005",
+      "name": "Adobe Creative Cloud",
+      "company": "アドビ株式会社",
+      "site": "https://www.adobe.com/jp/",
+      "category": "クリエイティブツール",
+      "affiliateKey": "adobe",
+      "channel": "direct",
+      "aspHint": "公式アフィリエイトプログラム（要確認）",
+      "payoutTier": "mid",
+      "contact": { "type": "unknown", "url": "", "note": "公式のアフィリエイトプログラム窓口を要確認" },
+      "fit": "本格的に制作・販売へ進む読者向けの上位提案として掲載枠あり。AI機能の解説記事とも接続しやすい。",
+      "asks": [
+        "アフィリエイトプログラムへの参加可否",
+        "掲載時のブランド表記ルールのご共有"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "P006",
+      "name": "TechAcademy（テックアカデミー）",
+      "company": "キラメックス株式会社",
+      "site": "https://techacademy.jp/",
+      "category": "オンラインスクール",
+      "affiliateKey": "techacademy",
+      "channel": "asp",
+      "aspHint": "A8.net（候補・要確認）",
+      "payoutTier": "high",
+      "contact": { "type": "asp-program", "url": "", "note": "ASP内のプログラム検索から提携申請。直接連絡先は未確認" },
+      "fit": "「AIで稼ぐ」系の記事で学習手段として紹介済み。無料体験があり、高単価かつ資料請求で成果が立ちやすい。",
+      "asks": [
+        "提携審査のご承認",
+        "無料体験・資料請求の成果条件のご共有",
+        "特別単価またはタイアップ記事の可否"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "P007",
+      "name": "デイトラ",
+      "company": "",
+      "site": "",
+      "category": "オンラインスクール",
+      "affiliateKey": "daitra",
+      "channel": "unknown",
+      "aspHint": "要確認",
+      "payoutTier": "high",
+      "contact": { "type": "unknown", "url": "", "note": "運営会社・公式サイト・申込窓口すべて要確認" },
+      "fit": "買い切り型で副業直結という訴求が、ChatGPT副業の始め方記事の読者層と合う。掲載枠が用意済み。",
+      "asks": [
+        "アフィリエイトプログラムの有無と参加条件のご確認",
+        "掲載時の表記ルールのご共有"
+      ],
+      "notes": "会社名・公式URLが未確認のため、送付前に必ず確認して台帳を更新すること。"
+    },
+    {
+      "id": "P008",
+      "name": "SHIFT AI",
+      "company": "",
+      "site": "",
+      "category": "AIスクール・コミュニティ",
+      "affiliateKey": "shiftai",
+      "channel": "unknown",
+      "aspHint": "要確認",
+      "payoutTier": "high",
+      "contact": { "type": "unknown", "url": "", "note": "運営会社・公式サイト・申込窓口すべて要確認" },
+      "fit": "生成AI特化という点で当メディアのテーマと最も近い。無料セミナー導線があり高単価。",
+      "asks": [
+        "アフィリエイトプログラムの有無と参加条件のご確認",
+        "無料セミナーの成果条件のご共有"
+      ],
+      "notes": "会社名・公式URLが未確認。"
+    },
+    {
+      "id": "P009",
+      "name": "studio US（スタジオアス）",
+      "company": "",
+      "site": "",
+      "category": "動画編集スクール",
+      "affiliateKey": "studio_us",
+      "channel": "unknown",
+      "aspHint": "要確認",
+      "payoutTier": "high",
+      "contact": { "type": "unknown", "url": "", "note": "運営会社・公式サイト・申込窓口すべて要確認" },
+      "fit": "YouTubeショート副業の記事で、本格化したい読者向けの導線として掲載枠がある。",
+      "asks": [
+        "アフィリエイトプログラムの有無と参加条件のご確認"
+      ],
+      "notes": "会社名・公式URLが未確認。"
+    },
+    {
+      "id": "P010",
+      "name": "Writing Hacks（ライティングハックス）",
+      "company": "",
+      "site": "",
+      "category": "ライティング講座",
+      "affiliateKey": "writing_hacks",
+      "channel": "unknown",
+      "aspHint": "要確認",
+      "payoutTier": "mid",
+      "contact": { "type": "unknown", "url": "", "note": "運営会社・公式サイト・申込窓口すべて要確認" },
+      "fit": "ライター単価アップの記事に掲載枠があり、読者の課題と講座内容が直結している。",
+      "asks": [
+        "アフィリエイトプログラムの有無と参加条件のご確認"
+      ],
+      "notes": "会社名・公式URLが未確認。"
+    }
+  ]
+}
