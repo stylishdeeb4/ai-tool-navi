@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "updatedAt": "2026-08-18T22:40:49.882Z",
+  "prospects": {
+    "P002": {
+      "status": "draft",
+      "history": [
+        {
+          "at": "2026-08-18T22:40:49.881Z",
+          "action": "draft_generated",
+          "from": "draft",
+          "to": "draft",
+          "hash": "738f0e001407"
+        }
+      ],
+      "notes": [],
+      "draftHash": "738f0e0014071eb54ddf96f3bccff96633fedfcd56db2c06fb6e99be138c6485"
+    }
+  }
+}
