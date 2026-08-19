@@ -28,3 +28,5 @@ next-env.d.ts
 
 # outreach CLI の送信用認証情報（絶対にコミットしない）
 .env.outreach
+outreach/.lock
+outreach/*.tmp*

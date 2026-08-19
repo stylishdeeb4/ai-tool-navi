@@ -107,9 +107,54 @@ function readJson(file, fallback) {
   }
 }
 
+/** 一時ファイルに書いてから rename する（書き込み途中で落ちても壊れない） */
 function writeJson(file, data) {
   fs.mkdirSync(path.dirname(file), { recursive: true })
-  fs.writeFileSync(file, JSON.stringify(data, null, 2) + '\n', 'utf8')
+  const tmp = `${file}.tmp${process.pid}`
+  fs.writeFileSync(tmp, JSON.stringify(data, null, 2) + '\n', 'utf8')
+  fs.renameSync(tmp, file)
+}
+
+/**
+ * 排他ロック。
+ * 状態ファイルは読み込み → 書き戻しで丸ごと上書きするため、
+ * 同時に2つ実行されると「送信済み」の記録が消え、同じ相手に二重送信されうる。
+ * そのため全コマンドを直列化する。
+ */
+function acquireLock({ timeoutMs = 15000, staleMs = 120000 } = {}) {
+  const lockPath = path.join(OUTREACH_DIR, '.lock')
+  fs.mkdirSync(OUTREACH_DIR, { recursive: true })
+  const start = Date.now()
+  for (;;) {
+    try {
+      const fd = fs.openSync(lockPath, 'wx')
+      fs.writeSync(fd, JSON.stringify({ pid: process.pid, at: nowIso() }))
+      fs.closeSync(fd)
+      let released = false
+      const release = () => {
+        if (released) return
+        released = true
+        try { fs.unlinkSync(lockPath) } catch { /* 既に消えていれば何もしない */ }
+      }
+      // fail() は process.exit するため、finally ではなく exit で確実に外す
+      process.on('exit', release)
+      return release
+    } catch (err) {
+      if (err.code !== 'EEXIST') throw err
+      // 放置された古いロックは壊す
+      try {
+        if (Date.now() - fs.statSync(lockPath).mtimeMs > staleMs) {
+          fs.unlinkSync(lockPath)
+          continue
+        }
+      } catch { /* competing プロセスが先に消した */ }
+      if (Date.now() - start > timeoutMs) {
+        fail('他のプロセスが outreach の状態を更新中です。終わるのを待って再実行してください。',
+          `  ロックファイル: ${path.relative(ROOT, lockPath)}\n  不要なら削除してください。`)
+      }
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 100)
+    }
+  }
 }
 
 const sha256 = s => crypto.createHash('sha256').update(s, 'utf8').digest('hex')
@@ -334,9 +379,16 @@ function syncIntegrity(state) {
     // 宛先の書き換えも承認の失効事由にする
     const prospect = loadProspects().find(x => x.id === id)
     const current = prospect ? recipientOf(prospect) : ''
-    const bound = e.status === 'approved' ? e.approvedRecipient : e.recipient
-    if (bound !== undefined && current !== bound) {
-      voided.push({ id, reason: `承認後に宛先が変更されました（${bound || '未設定'} → ${current || '未設定'}）` })
+    // 束縛が記録されていない承認は「無効」に倒す。
+    // undefined を素通りさせると、宛先の束縛が丸ごと効かなくなる。
+    const bound = (e.status === 'approved' ? e.approvedRecipient : e.recipient) ?? null
+    if (current !== (bound ?? '')) {
+      voided.push({
+        id,
+        reason: bound === null
+          ? '宛先の記録がない承認のため無効化しました（再承認が必要です）'
+          : `承認後に宛先が変更されました（${bound || '未設定'} → ${current || '未設定'}）`,
+      })
       transition(state, id, 'draft', 'approval_invalidated', {
         reason: 'recipient_changed', expected: bound || null, actual: current || null,
       })
@@ -1037,6 +1089,24 @@ function sentInLast24h() {
 
 const recipientOf = prospect => (prospect.contact && prospect.contact.email) || ''
 
+/**
+ * エラー文から認証情報を取り除く（多層防御）。
+ * SMTPクライアント側でも伏字にしているが、監査ログは追記専用で
+ * 一度混入すると消せないため、書き出す直前にもう一度通す。
+ */
+function redactSecrets(text, cfg) {
+  let out = String(text)
+  const secrets = [cfg.pass, cfg.user]
+    .filter(Boolean)
+    .flatMap(v => [v, Buffer.from(v, 'utf8').toString('base64')])
+  secrets.push(Buffer.from(`\0${cfg.user}\0${cfg.pass}`, 'utf8').toString('base64'))
+  for (const sec of secrets) {
+    if (sec) out = out.split(sec).join('<伏字>')
+  }
+  // 取りこぼし対策: 長いbase64列は中身に関わらず伏せる
+  return out.replace(/[A-Za-z0-9+/]{16,}={0,2}/g, '<伏字>')
+}
+
 async function cmdSend(args) {
   const prospect = findProspect(args['prospect-id'] || args.id || args._[1])
   const state = loadState()
@@ -1077,8 +1147,11 @@ async function cmdSend(args) {
       `  宛先を変更すると承認は失効し、再承認が必要になります。`)
   }
   if (!isValidEmail(to)) fail(`宛先の形式が不正です: ${to}`)
-  if (e.approvedRecipient && to !== e.approvedRecipient) {
-    fail(`承認時の宛先（${e.approvedRecipient}）と現在の宛先（${to}）が違います。再承認が必要です。`)
+  // 承認時の宛先と完全一致する場合のみ送る。
+  // approvedRecipient が無い記録は「宛先未承認」として扱い、必ず再承認させる。
+  if (e.approvedRecipient !== to) {
+    fail(`承認された宛先と一致しません。再承認が必要です。`,
+      `  承認時: ${e.approvedRecipient || '（記録なし）'}\n  現在  : ${to}`)
   }
 
   // --- ゲート5: チャネルの整合（ASP経由の相手にメールを送らない） ---
@@ -1143,11 +1216,14 @@ async function cmdSend(args) {
       from: cfg.fromEmail, fromName: cfg.fromName,
       to: [to], bcc: cfg.bcc, replyTo: cfg.replyTo || undefined,
       subject: parsed.subject, text: parsed.text,
-      onLog: args.verbose ? (dir, line) => console.log(dim(`  ${dir}: ${line.split('\n')[0]}`)) : undefined,
+      onLog: args.verbose
+        ? (dir, line) => console.log(dim(`  ${dir}: ${redactSecrets(line.split('\n')[0], cfg)}`))
+        : undefined,
     })
   } catch (err) {
-    audit({ prospect: prospect.id, action: 'email_failed', to, error: err.message })
-    fail(`送信に失敗しました: ${err.message}`,
+    const safe = redactSecrets(err.message || String(err), cfg).slice(0, 300)
+    audit({ prospect: prospect.id, action: 'email_failed', to, error: safe })
+    fail(`送信に失敗しました: ${safe}`,
       '  ステータスは「承認済み」のままです。原因を直してから再実行してください。')
   }
 
@@ -1172,8 +1248,11 @@ const handler = COMMANDS[command]
 if (!handler) {
   fail(`不明なコマンド: ${command}`, `  使えるコマンド: ${Object.keys(COMMANDS).join(', ')}\n  詳細: node scripts/outreach-cli.mjs help`)
 }
+const release = acquireLock()
 try {
   await handler(args)
 } catch (err) {
   fail(err && err.message ? err.message : String(err))
+} finally {
+  release()
 }

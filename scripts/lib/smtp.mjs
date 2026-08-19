@@ -164,7 +164,11 @@ class SmtpSession {
     this.socket.write(line + CRLF)
     const res = await this.read()
     if (expected && !expected.includes(res.code)) {
-      throw new Error(`SMTPエラー: "${line.split(' ')[0]}" に対して ${res.code}\n${res.text}`)
+      // 認証コマンドの行そのものは絶対に例外へ入れない。
+      // AUTH LOGIN のパスワード行は空白を含まないbase64なので、
+      // line.split(' ')[0] にするとパスワード全体が例外文に載ってしまう。
+      const shown = secret ? '<認証情報>' : line.split(' ')[0]
+      throw new Error(`SMTPエラー: "${shown}" に対して ${res.code}\n${res.text}`)
     }
     return res
   }
