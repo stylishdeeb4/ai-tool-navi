@@ -22,6 +22,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import crypto from 'node:crypto'
 import { fileURLToPath } from 'node:url'
+import { sendMail, isValidEmail } from './lib/smtp.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const OUTREACH_DIR = path.join(ROOT, 'outreach')
@@ -327,7 +328,19 @@ function syncIntegrity(state) {
       transition(state, id, 'draft', 'approval_invalidated', {
         reason: 'draft_modified', expected: e.draftHash.slice(0, 12), actual: d.hash.slice(0, 12),
       })
-      delete e.approvedHash; delete e.approvedBy; delete e.approvedAt
+      delete e.approvedHash; delete e.approvedBy; delete e.approvedAt; delete e.approvedRecipient
+      continue
+    }
+    // 宛先の書き換えも承認の失効事由にする
+    const prospect = loadProspects().find(x => x.id === id)
+    const current = prospect ? recipientOf(prospect) : ''
+    const bound = e.status === 'approved' ? e.approvedRecipient : e.recipient
+    if (bound !== undefined && current !== bound) {
+      voided.push({ id, reason: `承認後に宛先が変更されました（${bound || '未設定'} → ${current || '未設定'}）` })
+      transition(state, id, 'draft', 'approval_invalidated', {
+        reason: 'recipient_changed', expected: bound || null, actual: current || null,
+      })
+      delete e.approvedHash; delete e.approvedBy; delete e.approvedAt; delete e.approvedRecipient
     }
   }
   // 監査ログは検知時点で書かれるので、状態も同じタイミングで保存する。
@@ -669,7 +682,10 @@ function cmdSubmit(args) {
       placeholders.map(p => `    ${p}`).join('\n') + `\n  対象: ${path.relative(ROOT, d.file)}`)
   }
   e.draftHash = d.hash
-  transition(state, prospect.id, 'pending', 'submitted', { hash: d.hash.slice(0, 12), by: args.by || null })
+  e.recipient = recipientOf(prospect)
+  transition(state, prospect.id, 'pending', 'submitted', {
+    hash: d.hash.slice(0, 12), by: args.by || null, recipient: e.recipient || null,
+  })
   saveState(state)
   console.log(`${green('OK')} ${prospect.id} を承認待ちにしました（本文ハッシュ ${d.hash.slice(0, 12)}）。`)
   console.log(`\nレビュー: ${path.relative(ROOT, d.file)}`)
@@ -700,11 +716,15 @@ function cmdApprove(args) {
   e.approvedHash = d.hash
   e.approvedBy = by
   e.approvedAt = nowIso()
+  e.approvedRecipient = recipientOf(prospect)
   delete e.lastRejection
-  transition(state, prospect.id, 'approved', 'approved', { by, hash: d.hash.slice(0, 12), note: args.note || null })
+  transition(state, prospect.id, 'approved', 'approved', {
+    by, hash: d.hash.slice(0, 12), recipient: e.approvedRecipient || null, note: args.note || null,
+  })
   saveState(state)
   console.log(`${green('OK')} ${prospect.id} を承認しました（承認者: ${by}）。`)
-  console.log(`  ${dim(`この承認は本文ハッシュ ${d.hash.slice(0, 12)} に紐づきます。以後に文面を編集すると承認は失効します。`)}`)
+  console.log(`  ${dim(`この承認は本文ハッシュ ${d.hash.slice(0, 12)} と宛先「${e.approvedRecipient || '未設定'}」に紐づきます。`)}`)
+  console.log(`  ${dim('以後に文面または宛先を変更すると、承認は自動的に失効します。')}`)
   console.log(`\n次: ${cyan(`node scripts/outreach-cli.mjs export --prospect-id ${prospect.id}`)}`)
 }
 
@@ -910,7 +930,8 @@ ${bold('進める')}
   approve --prospect-id <ID> --by <名前> [--note ..]  承認（本文ハッシュに紐づく）
   reject  --prospect-id <ID> --by <名前> --reason ..  差し戻し
   export --prospect-id <ID>                           承認済み文面を outbox に書き出す
-  mark-sent --prospect-id <ID> [--via <経路>]         送信したことを記録
+  send   --prospect-id <ID> [--confirm] [--verbose]   メールを送信（--confirm なしはドライラン）
+  mark-sent --prospect-id <ID> [--via <経路>]         手動で送った場合に記録（ASPフォーム等）
   mark-replied --prospect-id <ID> --outcome <結果>    返信を記録 (accepted/declined/no-reply/other)
   mark-partnered --prospect-id <ID>                   提携成立を記録
   note --prospect-id <ID> --text <メモ>               メモを追加
@@ -918,7 +939,10 @@ ${bold('進める')}
 ${bold('承認のルール')}
   ・【要記入】が残っている文面は submit も approve もできません
   ・承認は承認時の本文のSHA-256に紐づきます。承認後に編集すると承認は自動失効します
-  ・export できるのは承認済みで、かつ文面が承認時から変わっていないものだけです
+  ・export / send ができるのは承認済みで、かつ文面が承認時から変わっていないものだけです
+  ・承認は宛先にも紐づきます。承認後に contact.email を変えると承認は失効します
+  ・send は既定でドライランです。--confirm を付けたときだけ実際に送信します
+  ・送信は1回につき1件のみ。一斉送信の機能はありません（既定の上限は24時間で20件）
 
 ${dim('例: node scripts/outreach-cli.mjs brief --prospect-id P002')}
 `)
@@ -933,6 +957,7 @@ const COMMANDS = {
   approve: cmdApprove,
   reject: cmdReject,
   export: cmdExport,
+  send: cmdSend,
   'mark-sent': cmdMarkSent,
   'mark-replied': cmdMarkReplied,
   'mark-partnered': cmdMarkPartnered,
@@ -942,6 +967,204 @@ const COMMANDS = {
   help: cmdHelp,
 }
 
+
+// ---------------------------------------------------------------
+// メール送信
+//   承認ゲートを通ったものだけを、1件ずつ送る。
+//   既定は必ずドライラン。実送信には --confirm が要る。
+// ---------------------------------------------------------------
+
+/** .env.outreach を読み込む（コミット禁止・既存の環境変数は上書きしない） */
+function loadEnvFile() {
+  const file = path.join(ROOT, '.env.outreach')
+  if (!fs.existsSync(file)) return
+  for (const line of fs.readFileSync(file, 'utf8').split('\n')) {
+    const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)$/)
+    if (!m) continue
+    const key = m[1]
+    let val = m[2].trim()
+    if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+      val = val.slice(1, -1)
+    }
+    if (process.env[key] === undefined) process.env[key] = val
+  }
+}
+
+function smtpConfig() {
+  loadEnvFile()
+  const env = process.env
+  return {
+    host: env.OUTREACH_SMTP_HOST || 'smtp.gmail.com',
+    port: Number(env.OUTREACH_SMTP_PORT || 465),
+    // 既定では465番のみ暗黙TLS。それ以外はSTARTTLSで暗号化する
+    secure: env.OUTREACH_SMTP_SECURE ? env.OUTREACH_SMTP_SECURE === 'true' : undefined,
+    user: env.OUTREACH_SMTP_USER || '',
+    pass: env.OUTREACH_SMTP_PASS || '',
+    fromEmail: env.OUTREACH_FROM_EMAIL || env.OUTREACH_SMTP_USER || '',
+    fromName: env.OUTREACH_FROM_NAME || '',
+    replyTo: env.OUTREACH_REPLY_TO || '',
+    bcc: (env.OUTREACH_BCC || '').split(',').map(s => s.trim()).filter(Boolean),
+    dailyLimit: Number(env.OUTREACH_DAILY_LIMIT || 20),
+  }
+}
+
+/** 下書き本文を「件名」と「本文」に分解する */
+function parseMessage(body) {
+  const m = body.match(/##\s*件名\s*\n([\s\S]*?)\n##\s*本文\s*\n([\s\S]*)$/)
+  if (!m) return { error: '下書きの形式が不正です（「## 件名」と「## 本文」が必要です）' }
+  const subject = m[1].trim()
+  const text = m[2].trim()
+  if (!subject) return { error: '件名が空です' }
+  if (subject.includes('\n')) return { error: '件名が複数行になっています。1行にしてください' }
+  if (!text) return { error: '本文が空です' }
+  return { subject, text }
+}
+
+/** 直近24時間の送信数（暴走・大量送信の歯止め） */
+function sentInLast24h() {
+  if (!fs.existsSync(AUDIT_FILE)) return 0
+  const since = Date.now() - 24 * 60 * 60 * 1000
+  let n = 0
+  for (const line of fs.readFileSync(AUDIT_FILE, 'utf8').split('\n')) {
+    if (!line.trim()) continue
+    try {
+      const r = JSON.parse(line)
+      if (r.action === 'email_sent' && new Date(r.at).getTime() >= since) n++
+    } catch { /* 壊れた行は無視 */ }
+  }
+  return n
+}
+
+const recipientOf = prospect => (prospect.contact && prospect.contact.email) || ''
+
+async function cmdSend(args) {
+  const prospect = findProspect(args['prospect-id'] || args.id || args._[1])
+  const state = loadState()
+  const voided = syncIntegrity(state)
+  if (voided.length) saveState(state)
+  const e = entryOf(state, prospect.id)
+
+  // --- ゲート1: 承認済みであること ---
+  if (e.status !== 'approved') {
+    fail(`${prospect.id} は「${STATUS[e.status].label}」です。送信できるのは承認済みのものだけです。`,
+      e.status === 'sent' ? '  既に送信済みです。重複送信を防ぐため拒否しました。'
+        : e.status === 'pending' ? '  承認者による approve が必要です。'
+        : `  submit → approve を実行してください。`)
+  }
+
+  // --- ゲート2: 文面が承認時から変わっていないこと ---
+  const d = readDraft(prospect.id)
+  if (!d) fail('下書きが見つかりません。')
+  if (d.hash !== e.approvedHash) {
+    fail('承認後に下書きが変更されています。submit からやり直してください。')
+  }
+
+  // --- ゲート3: 承認済み文面が書き出されていること ---
+  if (!e.exportedAt || !fs.existsSync(outboxPath(prospect.id))) {
+    fail(`先に export を実行してください: node scripts/outreach-cli.mjs export --prospect-id ${prospect.id}`)
+  }
+  const outbox = fs.readFileSync(outboxPath(prospect.id), 'utf8')
+  if (sha256(outbox.trim()) !== e.approvedHash) {
+    fail('outbox のファイルが承認済みの文面と一致しません。export をやり直してください。')
+  }
+
+  // --- ゲート4: 宛先が台帳にあり、承認時から変わっていないこと ---
+  const to = recipientOf(prospect)
+  if (!to) {
+    fail(`${prospect.id} の宛先メールアドレスが台帳に登録されていません。`,
+      `  outreach/prospects.json の ${prospect.id} → contact.email に、公式サイトで確認した\n` +
+      `  実在のアドレスを記入してください（推測で書かないこと）。\n` +
+      `  宛先を変更すると承認は失効し、再承認が必要になります。`)
+  }
+  if (!isValidEmail(to)) fail(`宛先の形式が不正です: ${to}`)
+  if (e.approvedRecipient && to !== e.approvedRecipient) {
+    fail(`承認時の宛先（${e.approvedRecipient}）と現在の宛先（${to}）が違います。再承認が必要です。`)
+  }
+
+  // --- ゲート5: チャネルの整合（ASP経由の相手にメールを送らない） ---
+  if (prospect.channel === 'asp' && !args.force) {
+    fail(`${prospect.id} は「ASP経由」の相手です（${prospect.aspHint || 'ASP'}）。`,
+      '  提携申請はASPのフォームから行うのが本来の経路です。\n' +
+      '  それでもメールを送るなら --force を付けてください。')
+  }
+
+  // --- ゲート6: 送信設定 ---
+  const cfg = smtpConfig()
+  const missing = ['user', 'pass'].filter(k => !cfg[k])
+  if (missing.length) {
+    fail('送信用のSMTP設定がありません。',
+      `  .env.outreach を作るか、環境変数を設定してください:\n\n` +
+      `    OUTREACH_SMTP_USER=あなたのアドレス@gmail.com\n` +
+      `    OUTREACH_SMTP_PASS=アプリパスワード（Gmailの通常のパスワードではありません）\n` +
+      `    OUTREACH_FROM_NAME=AIツールナビ 編集部\n\n` +
+      `  Gmailの場合、2段階認証を有効にしたうえで「アプリパスワード」を発行してください。\n` +
+      `  .env.outreach は .gitignore 済みです。絶対にコミットしないでください。`)
+  }
+  if (!isValidEmail(cfg.fromEmail)) fail(`差出人アドレスの形式が不正です: ${cfg.fromEmail}`)
+
+  // --- ゲート7: 1日の送信上限 ---
+  const sent24 = sentInLast24h()
+  if (sent24 >= cfg.dailyLimit) {
+    fail(`直近24時間の送信が上限（${cfg.dailyLimit}件）に達しています。`,
+      '  大量送信を防ぐための制限です。OUTREACH_DAILY_LIMIT で変更できます。')
+  }
+
+  const parsed = parseMessage(d.body)
+  if (parsed.error) fail(parsed.error)
+
+  // --- 送信内容の提示 ---
+  console.log(heading(`メール送信${args.confirm ? '' : '（ドライラン）'}  ${prospect.id} / ${prospect.name}`))
+  console.log(row('送信元', `${cfg.fromName ? cfg.fromName + ' ' : ''}<${cfg.fromEmail}>`))
+  console.log(row('宛先', bold(to)))
+  if (cfg.bcc.length) console.log(row('BCC', cfg.bcc.join(', ')))
+  if (cfg.replyTo) console.log(row('返信先', cfg.replyTo))
+  console.log(row('件名', parsed.subject))
+  console.log(row('SMTP', `${cfg.host}:${cfg.port}  ${dim('（パスワードは表示しません）')}`))
+  console.log(row('承認者', `${e.approvedBy}  ${dim(e.approvedAt)}`))
+  console.log(row('本文ハッシュ', dim(e.approvedHash.slice(0, 16))))
+  console.log(row('24時間の送信数', `${sent24} / ${cfg.dailyLimit}`))
+  console.log(`\n${dim('--- 本文 ---')}`)
+  console.log(parsed.text)
+  console.log(dim('--- 本文ここまで ---'))
+
+  if (!args.confirm) {
+    console.log(`\n${yellow('これはドライランです。メールは送信していません。')}`)
+    console.log(`実際に送るには --confirm を付けてください:`)
+    console.log(`  ${cyan(`node scripts/outreach-cli.mjs send --prospect-id ${prospect.id} --confirm`)}`)
+    return
+  }
+
+  // --- 実送信 ---
+  console.log(`\n送信中...`)
+  let result
+  try {
+    result = await sendMail({
+      host: cfg.host, port: cfg.port, secure: cfg.secure, user: cfg.user, pass: cfg.pass,
+      from: cfg.fromEmail, fromName: cfg.fromName,
+      to: [to], bcc: cfg.bcc, replyTo: cfg.replyTo || undefined,
+      subject: parsed.subject, text: parsed.text,
+      onLog: args.verbose ? (dir, line) => console.log(dim(`  ${dir}: ${line.split('\n')[0]}`)) : undefined,
+    })
+  } catch (err) {
+    audit({ prospect: prospect.id, action: 'email_failed', to, error: err.message })
+    fail(`送信に失敗しました: ${err.message}`,
+      '  ステータスは「承認済み」のままです。原因を直してから再実行してください。')
+  }
+
+  e.sentAt = nowIso()
+  e.sentVia = `smtp:${cfg.host}`
+  e.messageId = result.messageId
+  transition(state, prospect.id, 'sent', 'email_sent', {
+    to, via: e.sentVia, messageId: result.messageId, by: e.approvedBy,
+  })
+  saveState(state)
+
+  console.log(`\n${green('送信しました')} → ${to}`)
+  console.log(row('Message-ID', result.messageId))
+  console.log(`\n返信があったら:\n  ${cyan(`node scripts/outreach-cli.mjs mark-replied --prospect-id ${prospect.id} --outcome accepted`)}`)
+}
+
+// --- 実行（recipientOf などの const 定義より後に置く必要がある） ---
 const args = parseArgs(process.argv.slice(2))
 const command = args._[0] || (args.help ? 'help' : null)
 if (!command) { cmdHelp(); process.exit(0) }
@@ -949,4 +1172,8 @@ const handler = COMMANDS[command]
 if (!handler) {
   fail(`不明なコマンド: ${command}`, `  使えるコマンド: ${Object.keys(COMMANDS).join(', ')}\n  詳細: node scripts/outreach-cli.mjs help`)
 }
-handler(args)
+try {
+  await handler(args)
+} catch (err) {
+  fail(err && err.message ? err.message : String(err))
+}

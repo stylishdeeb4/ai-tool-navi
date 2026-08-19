@@ -3,7 +3,8 @@
     "提携アウトリーチのプロスペクト台帳。lib/affiliates.ts で url が空（＝未提携）のプログラムに対応します。",
     "company / site / contact が空のものは『未確認』です。送付前に必ず公式サイトで確認して埋めてください。",
     "推測で埋めないこと。verify コマンドが未確認のものを警告します。",
-    "id は変更しないでください（state.json・監査ログが id で紐づいています）。"
+    "id は変更しないでください（state.json・監査ログが id で紐づいています）。",
+    "contact.email は送信先アドレスです。公式サイトで確認した実在のアドレスだけを記入してください。空欄のままだと send は必ず失敗します。"
   ],
   "version": 1,
   "prospects": [
@@ -17,7 +18,12 @@
       "channel": "asp",
       "aspHint": "A8.net（候補・要確認）",
       "payoutTier": "high",
-      "contact": { "type": "asp-program", "url": "", "note": "ASP内のプログラム検索から提携申請。直接連絡先は未確認" },
+      "contact": {
+        "type": "asp-program",
+        "email": "",
+        "url": "",
+        "note": "ASP内のプログラム検索から提携申請。直接連絡先は未確認"
+      },
       "fit": "ブログ副業系の記事でサーバーを紹介済み（エックスサーバー／mixhost）。3社目の選択肢として比較表に追加できる。単価が高くブログ開設層と相性が良い。",
       "asks": [
         "提携審査のご承認",
@@ -36,7 +42,12 @@
       "channel": "asp",
       "aspHint": "A8.net / もしもアフィリエイト（候補・要確認）",
       "payoutTier": "low",
-      "contact": { "type": "asp-program", "url": "", "note": "ASP内のプログラム検索から提携申請。直接連絡先は未確認" },
+      "contact": {
+        "type": "asp-program",
+        "email": "",
+        "url": "",
+        "note": "ASP内のプログラム検索から提携申請。直接連絡先は未確認"
+      },
       "fit": "AI副業・AIライティング系の記事が主力で、案件獲得先として自然に紹介できる。掲載枠が4記事分すでに用意済みで、提携が通れば即日反映できる。無料登録型のため読者側のハードルも低い。",
       "asks": [
         "提携審査のご承認",
@@ -55,7 +66,12 @@
       "channel": "asp",
       "aspHint": "A8.net / もしもアフィリエイト（候補・要確認）",
       "payoutTier": "low",
-      "contact": { "type": "asp-program", "url": "", "note": "ASP内のプログラム検索から提携申請。直接連絡先は未確認" },
+      "contact": {
+        "type": "asp-program",
+        "email": "",
+        "url": "",
+        "note": "ASP内のプログラム検索から提携申請。直接連絡先は未確認"
+      },
       "fit": "クラウドワークスと併用を勧める文脈で紹介済み。単価アップ系の記事に掲載枠がある。",
       "asks": [
         "提携審査のご承認",
@@ -73,7 +89,12 @@
       "channel": "direct",
       "aspHint": "公式アフィリエイトプログラム（要確認）",
       "payoutTier": "mid",
-      "contact": { "type": "unknown", "url": "", "note": "公式サイトのアフィリエイト／パートナーページを要確認" },
+      "contact": {
+        "type": "unknown",
+        "email": "",
+        "url": "",
+        "note": "公式サイトのアフィリエイト／パートナーページを要確認"
+      },
       "fit": "AI動画・画像制作の記事で制作ツールとして紹介済み。ショート動画副業の文脈と噛み合い、無料トライアルがあるため読者に勧めやすい。",
       "asks": [
         "アフィリエイトプログラムへの参加可否",
@@ -92,7 +113,12 @@
       "channel": "direct",
       "aspHint": "公式アフィリエイトプログラム（要確認）",
       "payoutTier": "mid",
-      "contact": { "type": "unknown", "url": "", "note": "公式のアフィリエイトプログラム窓口を要確認" },
+      "contact": {
+        "type": "unknown",
+        "email": "",
+        "url": "",
+        "note": "公式のアフィリエイトプログラム窓口を要確認"
+      },
       "fit": "本格的に制作・販売へ進む読者向けの上位提案として掲載枠あり。AI機能の解説記事とも接続しやすい。",
       "asks": [
         "アフィリエイトプログラムへの参加可否",
@@ -110,7 +136,12 @@
       "channel": "asp",
       "aspHint": "A8.net（候補・要確認）",
       "payoutTier": "high",
-      "contact": { "type": "asp-program", "url": "", "note": "ASP内のプログラム検索から提携申請。直接連絡先は未確認" },
+      "contact": {
+        "type": "asp-program",
+        "email": "",
+        "url": "",
+        "note": "ASP内のプログラム検索から提携申請。直接連絡先は未確認"
+      },
       "fit": "「AIで稼ぐ」系の記事で学習手段として紹介済み。無料体験があり、高単価かつ資料請求で成果が立ちやすい。",
       "asks": [
         "提携審査のご承認",
@@ -129,7 +160,12 @@
       "channel": "unknown",
       "aspHint": "要確認",
       "payoutTier": "high",
-      "contact": { "type": "unknown", "url": "", "note": "運営会社・公式サイト・申込窓口すべて要確認" },
+      "contact": {
+        "type": "unknown",
+        "email": "",
+        "url": "",
+        "note": "運営会社・公式サイト・申込窓口すべて要確認"
+      },
       "fit": "買い切り型で副業直結という訴求が、ChatGPT副業の始め方記事の読者層と合う。掲載枠が用意済み。",
       "asks": [
         "アフィリエイトプログラムの有無と参加条件のご確認",
@@ -147,7 +183,12 @@
       "channel": "unknown",
       "aspHint": "要確認",
       "payoutTier": "high",
-      "contact": { "type": "unknown", "url": "", "note": "運営会社・公式サイト・申込窓口すべて要確認" },
+      "contact": {
+        "type": "unknown",
+        "email": "",
+        "url": "",
+        "note": "運営会社・公式サイト・申込窓口すべて要確認"
+      },
       "fit": "生成AI特化という点で当メディアのテーマと最も近い。無料セミナー導線があり高単価。",
       "asks": [
         "アフィリエイトプログラムの有無と参加条件のご確認",
@@ -165,7 +206,12 @@
       "channel": "unknown",
       "aspHint": "要確認",
       "payoutTier": "high",
-      "contact": { "type": "unknown", "url": "", "note": "運営会社・公式サイト・申込窓口すべて要確認" },
+      "contact": {
+        "type": "unknown",
+        "email": "",
+        "url": "",
+        "note": "運営会社・公式サイト・申込窓口すべて要確認"
+      },
       "fit": "YouTubeショート副業の記事で、本格化したい読者向けの導線として掲載枠がある。",
       "asks": [
         "アフィリエイトプログラムの有無と参加条件のご確認"
@@ -182,7 +228,12 @@
       "channel": "unknown",
       "aspHint": "要確認",
       "payoutTier": "mid",
-      "contact": { "type": "unknown", "url": "", "note": "運営会社・公式サイト・申込窓口すべて要確認" },
+      "contact": {
+        "type": "unknown",
+        "email": "",
+        "url": "",
+        "note": "運営会社・公式サイト・申込窓口すべて要確認"
+      },
       "fit": "ライター単価アップの記事に掲載枠があり、読者の課題と講座内容が直結している。",
       "asks": [
         "アフィリエイトプログラムの有無と参加条件のご確認"

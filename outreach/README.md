@@ -82,3 +82,65 @@ node scripts/outreach-cli.mjs mark-partnered --prospect-id P002
 `lib/affiliates.ts` にキーを追加し、記事に `{{AFF:<キー>}}` を置いたら、
 `prospects.json` に同じ `affiliateKey` のレコードを追加します（`id` は連番）。
 `node scripts/outreach-cli.mjs verify` で、台帳・記事・`lib/affiliates.ts` の食い違いを検出できます。
+
+---
+
+## メール送信（send）
+
+`export` までは「文面を書き出す」だけですが、`send` は**実際にメールを送信します**。
+
+### 送信できる条件（すべて満たす必要があります）
+
+1. ステータスが「承認済み」であること
+2. 承認後に下書きが編集されていないこと（本文のSHA-256が一致）
+3. `export` 済みで、outbox のファイルが承認済み文面と一致すること
+4. `prospects.json` の `contact.email` に宛先が入っており、**承認時の宛先と同じ**であること
+5. SMTPの認証情報が設定されていること
+6. 直近24時間の送信数が上限（既定20件）未満であること
+7. `--confirm` が付いていること（付けない場合はドライラン）
+
+どれか1つでも欠けると送信は行われません。
+
+### 承認は「文面」と「宛先」の両方に紐づきます
+
+承認後に文面を編集しても、`contact.email` を書き換えても、承認は自動的に失効して「下書き」に戻ります。
+監査ログには `approval_invalidated` として理由（`draft_modified` / `recipient_changed`）が記録されます。
+
+承認済みの文面を、承認者が知らない別の会社へ送る、という事故を防ぐための仕様です。
+
+### 初期設定
+
+```bash
+cp .env.outreach.example .env.outreach
+# .env.outreach を編集して OUTREACH_SMTP_USER と OUTREACH_SMTP_PASS を入れる
+```
+
+Gmailを使う場合、**通常のログインパスワードでは送信できません**。
+2段階認証を有効にしたうえで、[アプリパスワード](https://myaccount.google.com/apppasswords)を発行して使ってください。
+
+`.env.outreach` は `.gitignore` 済みです。絶対にコミットしないでください。
+
+### 送信の手順
+
+```bash
+# 1. まずドライラン。宛先・件名・本文を目で確認する
+node scripts/outreach-cli.mjs send --prospect-id P004
+
+# 2. 問題なければ --confirm を付けて実送信
+node scripts/outreach-cli.mjs send --prospect-id P004 --confirm
+```
+
+送信に成功すると、ステータスが「送信済み」になり、Message-ID が監査ログに残ります。
+送信に失敗した場合、ステータスは「承認済み」のまま変わりません（再実行できます）。
+
+### ASP経由の相手には使いません
+
+`channel` が `asp` のプロスペクト（クラウドワークス、ランサーズなど）は、
+提携申請をASPのフォームから行うのが本来の経路です。
+そのためメール送信は既定で拒否されます。手動で送った場合は `mark-sent` で記録してください。
+
+### 意図的に作っていない機能
+
+- **一斉送信** — 1回の実行で1件だけです。複数を一度に送る機能はありません
+- **宛先のコマンドライン指定** — 宛先は台帳（バージョン管理下）からのみ取得します。`--to` はありません
+- **添付ファイル・HTMLメール** — テキストメールのみです

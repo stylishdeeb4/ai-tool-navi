@@ -25,3 +25,6 @@ next-env.d.ts
 
 # vercel
 .vercel
+
+# outreach CLI の送信用認証情報（絶対にコミットしない）
+.env.outreach
