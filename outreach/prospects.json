@@ -1,0 +1,246 @@
+{
+  "_readme": [
+    "提携アウトリーチのプロスペクト台帳。lib/affiliates.ts で url が空（＝未提携）のプログラムに対応します。",
+    "company / site / contact が空のものは『未確認』です。送付前に必ず公式サイトで確認して埋めてください。",
+    "推測で埋めないこと。verify コマンドが未確認のものを警告します。",
+    "id は変更しないでください（state.json・監査ログが id で紐づいています）。",
+    "contact.email は送信先アドレスです。公式サイトで確認した実在のアドレスだけを記入してください。空欄のままだと send は必ず失敗します。",
+    "company / site / aspHint は2026年8月の調査結果。WebFetchが使えない環境のため検索結果からの確認であり、公式サイトでの最終確認は人間が行うこと。"
+  ],
+  "version": 1,
+  "prospects": [
+    {
+      "id": "P001",
+      "name": "ConoHa WING",
+      "company": "GMOインターネット株式会社",
+      "site": "https://www.conoha.jp/wing/",
+      "category": "レンタルサーバー",
+      "affiliateKey": "conoha",
+      "channel": "asp",
+      "aspHint": "A8.net / もしもアフィリエイト（両方に掲載あり）",
+      "payoutTier": "high",
+      "contact": {
+        "type": "asp-program",
+        "email": "",
+        "url": "https://support.conoha.jp/wing/",
+        "note": "メール窓口の公開なし。問い合わせはフォームと電話のみ"
+      },
+      "fit": "ブログ副業系の記事でサーバーを紹介済み（エックスサーバー／mixhost）。3社目の選択肢として比較表に追加できる。単価が高くブログ開設層と相性が良い。",
+      "asks": [
+        "提携審査のご承認",
+        "掲載時の表記ルール・使用可能なバナー素材のご共有",
+        "紹介実績に応じた特別単価のご相談"
+      ],
+      "notes": "【調査済 2026-08】旧台帳の「GMOインターネットグループ株式会社」は誤り。2025年1月の持株会社体制移行でインフラ事業はGMOインターネット株式会社へ承継された。ただし特定商取引法ページに旧社名が残るとの指摘があるため、送付前に https://www.conoha.jp/tokusho/ を開いて販売業者名を最終確認すること。成果報酬は最大10,000円（変動制）。公式の取次制度「パートナープログラム」もあるがASP経由との併用不可。"
+    },
+    {
+      "id": "P002",
+      "name": "クラウドワークス",
+      "company": "株式会社クラウドワークス",
+      "site": "https://crowdworks.jp/",
+      "category": "クラウドソーシング",
+      "affiliateKey": "crowdworks",
+      "channel": "asp",
+      "aspHint": "アクセストレード / A8.net / afb（副業系に強いアクセストレードが有力）",
+      "payoutTier": "low",
+      "contact": {
+        "type": "asp-program",
+        "email": "",
+        "url": "https://crowdworks.co.jp/contact/",
+        "note": "コーポレートサイトの問い合わせフォーム。提携はASP経由が正規ルート"
+      },
+      "fit": "AI副業・AIライティング系の記事が主力で、案件獲得先として自然に紹介できる。掲載枠が4記事分すでに用意済みで、提携が通れば即日反映できる。無料登録型のため読者側のハードルも低い。",
+      "asks": [
+        "提携審査のご承認",
+        "掲載時の表記ルール（サービス名・実績数値の記載可否）のご共有",
+        "AI活用・副業テーマでの記事タイアップの可否"
+      ],
+      "notes": "【調査済 2026-08】台帳の会社名・URLは正しい。単価はワーカー無料登録60〜120円、クライアント登録900〜1,100円で発注者側が約8〜10倍。成果条件は無料会員登録のみでCVハードルが低い定番案件だが、競合記事が非常に多い。プログラムが停止・再開を繰り返すとの指摘があり、申請前にASP内で案件の現存を確認すること。同名の別企業（インターネット広告代理店 cloudworks.co.jp）と混同しないよう、綴りは crowdworks（r入り）。関連サービス「クラウドワークスAI」は2026年6月終了済みで記事で触れる際は注意。"
+    },
+    {
+      "id": "P003",
+      "name": "ランサーズ",
+      "company": "ランサーズ株式会社",
+      "site": "https://www.lancers.jp/",
+      "category": "クラウドソーシング",
+      "affiliateKey": "lancers",
+      "channel": "self-signup",
+      "aspHint": "ランサーズ公式アフィリエイト（審査なし・登録するだけ）。A8.netに発注者向けもあり",
+      "payoutTier": "low",
+      "contact": {
+        "type": "self-signup",
+        "email": "",
+        "url": "https://www.lancers.jp/help/affiliate",
+        "note": "公式アフィリエイトのヘルプページ。ログインして設定するだけで開始できる"
+      },
+      "fit": "クラウドワークスと併用を勧める文脈で紹介済み。単価アップ系の記事に掲載枠がある。",
+      "asks": [
+        "提携審査のご承認",
+        "掲載時の表記ルールのご共有"
+      ],
+      "notes": "【調査済 2026-08】打診は不要。ランサーズ公式のアフィリエイトプログラムは審査なしで、会員登録してアフィリエイト設定ページから開始できる。最優先で着手してよい。単価は公式ヘルプ由来の情報で「新規会員登録100円／仕事の発注ごとに300円」。調査中に出た「発注者登録1,000円」は裏付けが取れなかったため採用しない。コーポレートは lancers.co.jp、サービスは lancers.jp の2系統。"
+    },
+    {
+      "id": "P004",
+      "name": "Canva Pro",
+      "company": "Canva Pty Ltd",
+      "site": "https://www.canva.com/",
+      "category": "デザインツール",
+      "affiliateKey": "canva",
+      "channel": "direct",
+      "aspHint": "公式プログラム Canvassador（トラッキングは Impact 経由）",
+      "payoutTier": "mid",
+      "contact": {
+        "type": "email",
+        "email": "affiliate-support@canva.com",
+        "url": "",
+        "note": "Canva ヘルプセンターでアフィリエイト窓口として案内されているアドレス"
+      },
+      "fit": "AI動画・画像制作の記事で制作ツールとして紹介済み。ショート動画副業の文脈と噛み合い、無料トライアルがあるため読者に勧めやすい。",
+      "asks": [
+        "アフィリエイトプログラムへの参加可否",
+        "日本語圏のメディア向けプログラムの有無",
+        "掲載時のブランドガイドラインのご共有"
+      ],
+      "notes": "【調査済 2026-08】日本法人 Canva Japan株式会社（法人番号9010401177221）は実在するが、アフィリエイトの窓口はグローバル側のため宛名は Canva Pty Ltd。A8.net等の一般ASP経由の公募プログラムは2023年7月21日で終了し、現在は Canvassador 認定制。まず Canvassador の申請フローを確認し、それでも不明点があれば affiliate-support@canva.com に問い合わせるのが順序。"
+    },
+    {
+      "id": "P005",
+      "name": "Adobe Creative Cloud",
+      "company": "アドビ株式会社",
+      "site": "https://www.adobe.com/jp/",
+      "category": "クリエイティブツール",
+      "affiliateKey": "adobe",
+      "channel": "self-signup",
+      "aspHint": "公式アフィリエイトプログラム（Partnerize経由）",
+      "payoutTier": "mid",
+      "contact": {
+        "type": "self-signup",
+        "email": "",
+        "url": "https://www.adobe.com/jp/affiliates.html",
+        "note": "公式ページから直接申請できる。メールでの打診は不要"
+      },
+      "fit": "本格的に制作・販売へ進む読者向けの上位提案として掲載枠あり。AI機能の解説記事とも接続しやすい。",
+      "asks": [
+        "アフィリエイトプログラムへの参加可否",
+        "掲載時のブランド表記ルールのご共有"
+      ],
+      "notes": "【調査済 2026-08】打診は不要。公式ページから Partnerize 経由で直接申請する形式。契約・支払いの相手方は米国 Adobe Inc. と委託先 Partnerize であり、日本法人アドビ株式会社は関与しない点に注意。国内ASP（afb）にも掲載があるとの情報があり要確認。"
+    },
+    {
+      "id": "P006",
+      "name": "TechAcademy（テックアカデミー）",
+      "company": "株式会社システムシェアード",
+      "site": "https://techacademy.jp/",
+      "category": "オンラインスクール",
+      "affiliateKey": "techacademy",
+      "channel": "asp",
+      "aspHint": "A8.net / もしもアフィリエイト / バリューコマース（稼働状況は要確認）",
+      "payoutTier": "high",
+      "contact": {
+        "type": "asp-program",
+        "email": "",
+        "url": "",
+        "note": "メール窓口は未確認"
+      },
+      "fit": "「AIで稼ぐ」系の記事で学習手段として紹介済み。無料体験があり、高単価かつ資料請求で成果が立ちやすい。",
+      "asks": [
+        "提携審査のご承認",
+        "無料体験・資料請求の成果条件のご共有",
+        "特別単価またはタイアップ記事の可否"
+      ],
+      "notes": "【調査済 2026-08】旧台帳の「キラメックス株式会社」は誤り。2025年4月にキラメックスは株式会社ブリューアスへ統合・商号変更し、さらに2025年12月31日付でテックアカデミー事業が株式会社システムシェアードへ譲渡された（ユナイテッド株式会社のIR開示で確認）。旧社名宛てに送ると、既に事業を手放した会社に届く。さらに新規申込受付が停止中のため、現時点では打診対象から外すのが妥当。",
+      "paused": "2026年1月頃から新規申込の受付を停止しており、2026年8月現在も停止中。再開までは打診しても意味がない"
+    },
+    {
+      "id": "P007",
+      "name": "デイトラ",
+      "company": "株式会社デイトラ",
+      "site": "https://daily-trial.com/",
+      "category": "オンラインスクール",
+      "affiliateKey": "daitra",
+      "channel": "asp",
+      "aspHint": "もしもアフィリエイト（対象コース1本につき5,000円＋W報酬12%）",
+      "payoutTier": "high",
+      "contact": {
+        "type": "asp-program",
+        "email": "",
+        "url": "https://daily-trial.co.jp/",
+        "note": "コーポレートサイト。メールアドレスは難読化されており未取得"
+      },
+      "fit": "買い切り型で副業直結という訴求が、ChatGPT副業の始め方記事の読者層と合う。掲載枠が用意済み。",
+      "asks": [
+        "アフィリエイトプログラムの有無と参加条件のご確認",
+        "掲載時の表記ルールのご共有"
+      ],
+      "notes": "【調査済 2026-08】運営会社は株式会社デイトラ（法人番号4013303004646、設立2019年5月）。旧商号「合同会社東京フリーランス」名義の情報がネット上に多数残っているが、2021年7月に商号変更済みなので宛名に使わないこと。サービスは daily-trial.com、コーポレートは daily-trial.co.jp の2系統。"
+    },
+    {
+      "id": "P008",
+      "name": "SHIFT AI",
+      "company": "株式会社SHIFT AI",
+      "site": "https://shift-ai.co.jp/",
+      "category": "AIスクール・コミュニティ",
+      "affiliateKey": "shiftai",
+      "channel": "asp",
+      "aspHint": "レントラックス（クローズドASP・招待制）／自社直営プログラム（shift-ai.net）",
+      "payoutTier": "high",
+      "contact": {
+        "type": "asp-program",
+        "email": "",
+        "url": "",
+        "note": "調査で出たアドレスは別ドメイン(10xc.jp)で裏付けが弱いため採用しない"
+      },
+      "fit": "生成AI特化という点で当メディアのテーマと最も近い。無料セミナー導線があり高単価。",
+      "asks": [
+        "アフィリエイトプログラムの有無と参加条件のご確認",
+        "無料セミナーの成果条件のご共有"
+      ],
+      "notes": "【調査済 2026-08】社名は「株式会社SHIFT AI」（SHIFTとAIの間に半角スペース）。株式会社SHIFT（ソフトウェアテスト大手 shiftinc.jp）、株式会社AI Shift（サイバーエージェント系 ai-shift.co.jp）は全くの別会社なので宛名を絶対に間違えないこと。レントラックスは招待制のクローズドASPのため、まず自社直営プログラムの窓口を当たるのが現実的。"
+    },
+    {
+      "id": "P009",
+      "name": "studio US（スタジオアス）",
+      "company": "株式会社AHGS",
+      "site": "https://studio-us.org/",
+      "category": "動画編集スクール",
+      "affiliateKey": "studio_us",
+      "channel": "asp",
+      "aspHint": "A8.net",
+      "payoutTier": "high",
+      "contact": {
+        "type": "asp-program",
+        "email": "",
+        "url": "https://ahgs.co.jp/",
+        "note": "コーポレートサイト"
+      },
+      "fit": "YouTubeショート副業の記事で、本格化したい読者向けの導線として掲載枠がある。",
+      "asks": [
+        "アフィリエイトプログラムの有無と参加条件のご確認"
+      ],
+      "notes": "【調査済 2026-08】運営は株式会社AHGS。コーポレート ahgs.co.jp とサービス studio-us.org は別ドメイン。検索時に「STUDIOUS」（アパレルEC）や「STUDIO」（ノーコードツール）が混ざるため取り違えに注意。"
+    },
+    {
+      "id": "P010",
+      "name": "Writing Hacks（ライティングハックス）",
+      "company": "株式会社スキルハックス",
+      "site": "https://skill-hacks.co.jp/writing-hacks-2/",
+      "category": "ライティング講座",
+      "affiliateKey": "writing_hacks",
+      "channel": "asp",
+      "aspHint": "もしもアフィリエイト（現行の稼働は要確認）",
+      "payoutTier": "mid",
+      "contact": {
+        "type": "asp-program",
+        "email": "",
+        "url": "https://skill-hacks.co.jp/",
+        "note": "コーポレートサイト"
+      },
+      "fit": "ライター単価アップの記事に掲載枠があり、読者の課題と講座内容が直結している。",
+      "asks": [
+        "アフィリエイトプログラムの有無と参加条件のご確認"
+      ],
+      "notes": "【調査済 2026-08】運営は株式会社スキルハックス。BRAIN HOLDINGS は同社が掲げるグループブランド名であり別法人ではない（当初の移管懸念は否定された）。受講生・購入者限定の自社紹介プログラムもある。"
+    }
+  ]
+}
