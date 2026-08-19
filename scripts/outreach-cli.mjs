@@ -491,6 +491,16 @@ function writeDraft(prospect, ctx) {
 // 表示ヘルパ
 // ---------------------------------------------------------------
 
+/** 接触チャネルの表示。self-signup は「打診不要・登録するだけ」を意味する */
+function channelLabel(prospect) {
+  switch (prospect.channel) {
+    case 'asp': return `ASP経由（${prospect.aspHint || '要確認'}）`
+    case 'self-signup': return `${green('打診不要')} 自分で登録するだけ（${prospect.aspHint || ''}）`
+    case 'direct': return `直接（${prospect.aspHint || '問い合わせフォーム／メール'}）`
+    default: return dim('要確認')
+  }
+}
+
 function statusLabel(status) {
   const s = STATUS[status]
   if (!s) return status
@@ -546,14 +556,18 @@ function cmdBrief(args) {
     out.push(`\n${yellow('! 承認が失効しました')} — ${voided.find(v => v.id === prospect.id).reason}。再度 submit → approve が必要です。`)
   }
 
+  if (prospect.paused) {
+    out.push(`\n${yellow('! 先方が受付停止中')} — ${prospect.paused}`)
+  }
+  if (prospect.channel === 'self-signup') {
+    out.push(`\n${green('! このプログラムは打診不要です')} — 自分で登録するだけで開始できます。文面の作成・承認は必要ありません。`)
+  }
   out.push(section('1. 相手先'))
   out.push(row('プログラム名', prospect.name))
   out.push(row('運営会社', prospect.company || dim('要確認（公式サイトで確認して台帳に記入）')))
   out.push(row('公式サイト', prospect.site || dim('要確認')))
   out.push(row('カテゴリ', prospect.category))
-  out.push(row('接触チャネル', prospect.channel === 'asp'
-    ? `ASP経由（${prospect.aspHint || '要確認'}）`
-    : prospect.channel === 'direct' ? '直接（問い合わせフォーム／メール）' : dim('要確認')))
+  out.push(row('接触チャネル', channelLabel(prospect)))
   out.push(row('連絡先', prospect.contact?.url || dim(prospect.contact?.note || '要確認（公式サイトで確認）')))
   out.push(row('想定単価帯', { high: '高（スクール・サーバー等）', mid: '中', low: '低（無料登録型）' }[prospect.payoutTier] || '不明'))
 
@@ -635,6 +649,7 @@ function cmdList(args) {
       slots: (placements[p.affiliateKey] || []).length,
       linked: Boolean(aff && aff.linked),
       priority: priorityScore(p, placements),
+      paused: Boolean(p.paused),
     }
   })
   if (args.status) rows = rows.filter(r => r.status === args.status)
@@ -647,13 +662,14 @@ function cmdList(args) {
   console.log(`  ${pad('ID', 6)}${pad('プログラム', 30)}${pad('ステータス', 12)}${pad('掲載枠', 8)}${pad('優先度', 8)}リンク`)
   console.log(`  ${'-'.repeat(72)}`)
   for (const r of rows) {
-    console.log(`  ${pad(r.id, 6)}${pad(truncate(r.name, 30), 30)}${pad(STATUS[r.status]?.label || r.status, 12)}${pad(`${r.slots}件`, 8)}${pad(String(r.priority), 8)}${r.linked ? green('設定済') : dim('未設定')}`)
+    console.log(`  ${pad(r.id, 6)}${pad(truncate(r.name, 30), 30)}${pad(STATUS[r.status]?.label || r.status, 12)}${pad(`${r.slots}件`, 8)}${pad(r.paused ? yellow('停止中') : String(r.priority), 8)}${r.linked ? green('設定済') : dim('未設定')}`)
   }
   console.log(`\n  ${dim('優先度 = 掲載待ちの枠数 × 単価帯の重み。ブリーフは brief --prospect-id <ID> で表示します。')}`)
 }
 
 /** 掲載枠の数と単価帯から優先度を算出（データから決まるので手で並べ替えない） */
 function priorityScore(prospect, placements) {
+  if (prospect.paused) return 0 // 先方が受付停止中。打診しても意味がない
   const slots = (placements[prospect.affiliateKey] || []).length
   const weight = { high: 3, mid: 2, low: 1 }[prospect.payoutTier] || 1
   return slots * weight + (prospect.payoutTier === 'high' ? 2 : 0)
@@ -946,6 +962,9 @@ function cmdVerify() {
   for (const key of Object.keys(placements)) {
     if (!affiliates[key]) problems.push(`記事内の {{AFF:${key}}} が lib/affiliates.ts に未登録です`)
   }
+  for (const p of prospects) {
+    if (p.paused) problems.push(`${p.id}: 先方が受付停止中です — ${p.paused}`)
+  }
   for (const v of voided) problems.push(`${v.id}: ${v.reason}（承認を失効させました）`)
 
   console.log(heading('整合性チェック'))
@@ -1155,10 +1174,18 @@ async function cmdSend(args) {
   }
 
   // --- ゲート5: チャネルの整合（ASP経由の相手にメールを送らない） ---
+  if (prospect.channel === 'self-signup' && !args.force) {
+    fail(`${prospect.id} は打診が不要な相手です（${prospect.aspHint || ''}）。`,
+      '  自分で登録するだけで開始できるため、メールを送る必要はありません。\n' +
+      '  それでも送るなら --force を付けてください。')
+  }
   if (prospect.channel === 'asp' && !args.force) {
     fail(`${prospect.id} は「ASP経由」の相手です（${prospect.aspHint || 'ASP'}）。`,
       '  提携申請はASPのフォームから行うのが本来の経路です。\n' +
       '  それでもメールを送るなら --force を付けてください。')
+  }
+  if (prospect.paused && !args.force) {
+    fail(`${prospect.id} は先方が受付停止中です。`, `  ${prospect.paused}\n  それでも送るなら --force を付けてください。`)
   }
 
   // --- ゲート6: 送信設定 ---
