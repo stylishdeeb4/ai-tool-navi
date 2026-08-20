@@ -9,6 +9,8 @@ export interface PostMeta {
   title: string
   description: string
   date: string
+  /** 大幅リライト時の更新日（任意）。公開日 date は変えずにこちらを更新する */
+  updated?: string
   category: string
   tags: string[]
   image?: string
@@ -48,6 +50,7 @@ export function getPostMeta(slug: string): PostMeta | null {
       title: data.title || '',
       description: data.description || '',
       date: data.date || '',
+      updated: data.updated,
       category: data.category || 'AI',
       tags: data.tags || [],
       image: data.image,
@@ -72,6 +75,7 @@ export function getPost(slug: string): Post | null {
       title: data.title || '',
       description: data.description || '',
       date: data.date || '',
+      updated: data.updated,
       category: data.category || 'AI',
       tags: data.tags || [],
       image: data.image,
