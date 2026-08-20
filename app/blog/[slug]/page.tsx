@@ -61,16 +61,28 @@ export default async function ArticlePage({ params }: Props) {
     headline: post.title,
     description: post.description,
     datePublished: post.date,
-    dateModified: post.date,
+    dateModified: post.updated || post.date,
+    inLanguage: 'ja',
     mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}/blog/${post.slug}` },
     image: post.image || `${SITE_URL}/api/og?title=${encodeURIComponent(post.title)}&category=${encodeURIComponent(post.category)}`,
     author: { '@type': 'Organization', name: 'AIツールナビ編集部', url: `${SITE_URL}/about` },
     publisher: { '@type': 'Organization', name: 'AIツールナビ', url: SITE_URL },
   }
 
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'ホーム', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: '記事一覧', item: `${SITE_URL}/blog` },
+      { '@type': 'ListItem', position: 3, name: post.title, item: `${SITE_URL}/blog/${post.slug}` },
+    ],
+  }
+
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
 
       <div className="lg:flex gap-8">
         <article className="flex-1 min-w-0">
@@ -97,6 +109,7 @@ export default async function ArticlePage({ params }: Props) {
               <span className="text-gray-600">AIツールナビ編集部</span>
             </Link>
             <time dateTime={post.date}>公開：{new Date(post.date).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
+            {post.updated && <time dateTime={post.updated}>更新：{new Date(post.updated).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })}</time>}
             {post.readingTime && <span>読了時間：約{post.readingTime}分</span>}
           </div>
 
