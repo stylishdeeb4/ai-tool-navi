@@ -3,6 +3,7 @@ import ArticleCard from '@/components/ArticleCard'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/blog' },
   title: '記事一覧',
   description: 'AIツールナビの全記事一覧。ChatGPT・Claude・画像生成AIなど最新AIツールの使い方・比較記事をまとめています。',
 }
