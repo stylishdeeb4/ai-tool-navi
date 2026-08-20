@@ -16,6 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const name = categoryMap[params.category]
   if (!name) return {}
   return {
+    alternates: { canonical: `/category/${params.category}` },
     title: `${name}の記事一覧`,
     description: `${name}に関する最新記事・使い方・比較情報をまとめています。`,
   }
