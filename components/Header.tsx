@@ -1,15 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { useState } from 'react'
-
-const categories = [
-  { name: 'ChatGPT', href: '/category/chatgpt' },
-  { name: 'Claude', href: '/category/claude' },
-  { name: '画像生成AI', href: '/category/image-ai' },
-  { name: 'AI動画', href: '/category/video-ai' },
-  { name: '副業・収益化', href: '/category/fukugyo' },
-  { name: '比較・レビュー', href: '/category/review' },
-]
+import { categories } from '@/lib/categories'
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -27,9 +19,9 @@ export default function Header() {
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav aria-label="カテゴリ" className="hidden lg:flex items-center gap-1">
             {categories.map(c => (
-              <Link key={c.href} href={c.href}
+              <Link key={c.slug} href={`/category/${c.slug}`}
                 className="px-3 py-1.5 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
                 {c.name}
               </Link>
@@ -38,8 +30,11 @@ export default function Header() {
 
           {/* Mobile hamburger */}
           <button
-            className="md:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100"
+            type="button"
+            className="lg:hidden p-3 rounded-md text-gray-600 hover:bg-gray-100"
             onClick={() => setMenuOpen(!menuOpen)}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-categories"
             aria-label="メニュー">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {menuOpen
@@ -51,10 +46,10 @@ export default function Header() {
 
         {/* Mobile menu */}
         {menuOpen && (
-          <nav className="md:hidden py-3 border-t border-gray-100">
+          <nav id="mobile-categories" aria-label="カテゴリ" className="lg:hidden py-3 border-t border-gray-100">
             {categories.map(c => (
-              <Link key={c.href} href={c.href}
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-md"
+              <Link key={c.slug} href={`/category/${c.slug}`}
+                className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-md"
                 onClick={() => setMenuOpen(false)}>
                 {c.name}
               </Link>

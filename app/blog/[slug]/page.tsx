@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import ArticleCard from '@/components/ArticleCard'
 import AdBanner from '@/components/AdBanner'
-import { markdownToHtml } from '@/lib/markdown'
+import { renderMarkdown } from '@/lib/markdown'
 import { categoryHref } from '@/lib/categories'
 
 interface Props {
@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = getPost(params.slug)
   if (!post) return {}
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://hukugyou.blog'
-  const ogImage = post.image || `${SITE_URL}/api/og?title=${encodeURIComponent(post.title)}&category=${encodeURIComponent(post.category)}`
+  const ogImage = new URL(post.image || `/api/og?title=${encodeURIComponent(post.title)}&category=${encodeURIComponent(post.category)}`, SITE_URL).href
   return {
     title: post.title,
     description: post.description,
@@ -29,6 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: post.description,
       type: 'article',
       publishedTime: post.date,
+      modifiedTime: post.updated || post.date,
       url: `${SITE_URL}/blog/${post.slug}`,
       images: [{ url: ogImage, width: 1200, height: 630, alt: post.title }],
     },
@@ -49,7 +50,7 @@ export default async function ArticlePage({ params }: Props) {
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://hukugyou.blog'
   const coverImage = post.image || `/api/og?title=${encodeURIComponent(post.title)}&category=${encodeURIComponent(post.category)}`
 
-  const contentHtml = await markdownToHtml(post.content)
+  const { html: contentHtml, headings } = await renderMarkdown(post.content)
   const allPosts = getAllPosts()
   const related = allPosts
     .filter(p => p.slug !== post.slug && p.category === post.category)
@@ -64,7 +65,7 @@ export default async function ArticlePage({ params }: Props) {
     dateModified: post.updated || post.date,
     inLanguage: 'ja',
     mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}/blog/${post.slug}` },
-    image: post.image || `${SITE_URL}/api/og?title=${encodeURIComponent(post.title)}&category=${encodeURIComponent(post.category)}`,
+    image: new URL(coverImage, SITE_URL).href,
     author: { '@type': 'Organization', name: 'AIツールナビ編集部', url: `${SITE_URL}/about` },
     publisher: { '@type': 'Organization', name: 'AIツールナビ', url: SITE_URL },
   }
@@ -81,8 +82,8 @@ export default async function ArticlePage({ params }: Props) {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd).replace(/</g, '\\u003c') }} />
 
       <div className="lg:flex gap-8">
         <article className="flex-1 min-w-0">
@@ -114,11 +115,21 @@ export default async function ArticlePage({ params }: Props) {
           </div>
 
           <div className="mb-8 rounded-xl overflow-hidden shadow-sm">
-            <img src={coverImage} alt={post.title} className="w-full h-64 object-cover" />
+            <img src={coverImage} alt={post.title} width={1200} height={630} className="w-full h-auto" />
           </div>
 
           <AdBanner slot="ARTICLE_TOP" format="horizontal" className="mb-8" />
 
+          {post.content.includes('{{AFF:') && <p className="text-sm text-gray-600 mb-5">この記事には広告・アフィリエイトリンクが含まれます。</p>}
+
+          {headings.length > 1 && (
+            <nav aria-label="この記事の目次" className="bg-white border border-gray-200 rounded-xl p-5 mb-8">
+              <h2 className="text-base mb-3">この記事でわかること</h2>
+              <ol className="list-decimal pl-5 space-y-2 text-sm leading-6">
+                {headings.map(heading => <li key={heading.id}><a href={`#${heading.id}`} className="text-blue-700 underline underline-offset-4">{heading.title}</a></li>)}
+              </ol>
+            </nav>
+          )}
           <div className="prose-article" dangerouslySetInnerHTML={{ __html: contentHtml }} />
 
           {post.tags.length > 0 && (

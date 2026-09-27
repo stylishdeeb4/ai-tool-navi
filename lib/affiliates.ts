@@ -42,7 +42,7 @@ export const affiliates: Record<string, AffiliateOffer> = {
     name: 'エックスサーバー',
     catch: '国内シェアトップクラスの安定性。WordPressクイックスタートで簡単に始められます。',
     button: 'エックスサーバーを見てみる',
-    note: '※迷ったらこの2社のどちらかで間違いありません',
+    note: '※契約期間・更新料金・サポート条件を公式サイトで確認してください',
     url: 'https://px.a8.net/svt/ejp?a8mat=4B62OE+FKUCMQ+CO4+61C2Q',
   },
   mixhost: {
@@ -50,7 +50,7 @@ export const affiliates: Record<string, AffiliateOffer> = {
     name: 'mixhost（ミックスホスト）',
     catch: '高速表示に定評があるWordPress向けサーバー。WordPressクイックスタートで申し込みと同時にブログを開設できます。',
     button: 'mixhostを見てみる',
-    note: '※表示速度を重視する方に人気です',
+    note: '※必要な機能と契約・更新時の費用を公式サイトで確認してください',
     url: 'https://px.a8.net/svt/ejp?a8mat=3HQV6B+3KMEQ+3JTE+5YJRM',
   },
   // クラウドソーシング（ライティング副業の案件獲得）
