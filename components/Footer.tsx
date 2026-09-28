@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { categories } from '@/lib/categories'
 
 export default function Footer() {
   const year = new Date().getFullYear()
@@ -15,11 +16,9 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-semibold mb-3">カテゴリ</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/category/chatgpt" className="hover:text-white transition-colors">ChatGPT</Link></li>
-              <li><Link href="/category/claude" className="hover:text-white transition-colors">Claude</Link></li>
-              <li><Link href="/category/image-ai" className="hover:text-white transition-colors">画像生成AI</Link></li>
-              <li><Link href="/category/video-ai" className="hover:text-white transition-colors">AI動画</Link></li>
-              <li><Link href="/category/review" className="hover:text-white transition-colors">比較・レビュー</Link></li>
+              {categories.map(category => (
+                <li key={category.slug}><Link href={`/category/${category.slug}`} className="inline-block py-1 hover:text-white transition-colors">{category.name}</Link></li>
+              ))}
             </ul>
           </div>
           <div>

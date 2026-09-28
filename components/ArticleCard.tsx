@@ -7,6 +7,7 @@ const categoryColors: Record<string, string> = {
   '画像生成AI': 'bg-purple-100 text-purple-700',
   'AI動画': 'bg-red-100 text-red-700',
   '比較・レビュー': 'bg-blue-100 text-blue-700',
+  '副業・収益化': 'bg-teal-100 text-teal-800',
   AI: 'bg-blue-100 text-blue-700',
 }
 
@@ -28,21 +29,23 @@ export default function ArticleCard({ post, featured = false }: Props) {
         <img
           src={coverSrc}
           alt={post.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          loading="lazy"
+          className={`w-full h-full ${featured ? 'object-contain bg-blue-50' : 'object-cover'} group-hover:scale-105 transition-transform duration-300`}
+          loading={featured ? 'eager' : 'lazy'}
+          width={1200}
+          height={630}
         />
       </div>
 
       <div className="p-5">
-        <div className="flex items-center gap-2 mb-2">
+        <div className="flex flex-wrap items-center gap-2 mb-2">
           <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${colorClass}`}>
             {post.category}
           </span>
-          <time className="text-xs text-gray-400">
-            {new Date(post.date).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })}
+          <time dateTime={post.updated || post.date} className="text-xs text-gray-500">
+            {post.updated ? '更新 ' : ''}{new Date(post.updated || post.date).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })}
           </time>
           {post.readingTime && (
-            <span className="text-xs text-gray-400">約{post.readingTime}分</span>
+            <span className="text-xs text-gray-500">約{post.readingTime}分</span>
           )}
         </div>
 
@@ -52,11 +55,6 @@ export default function ArticleCard({ post, featured = false }: Props) {
 
         <p className="text-sm text-gray-500 line-clamp-2 leading-relaxed">{post.description}</p>
 
-        <div className="mt-3 flex flex-wrap gap-1">
-          {post.tags.slice(0, 3).map(tag => (
-            <span key={tag} className="text-xs text-gray-400 bg-gray-50 px-2 py-0.5 rounded">#{tag}</span>
-          ))}
-        </div>
       </div>
     </article>
   )

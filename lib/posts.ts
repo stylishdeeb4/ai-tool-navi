@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
+import { estimateReadingTime } from './reading-time'
 
 const postsDirectory = path.join(process.cwd(), 'content/posts')
 
@@ -43,8 +44,7 @@ export function getPostMeta(slug: string): PostMeta | null {
     const fullPath = fs.existsSync(mdxPath) ? mdxPath : mdPath
     const fileContents = fs.readFileSync(fullPath, 'utf8')
     const { data, content } = matter(fileContents)
-    const words = content.split(/\s+/).length
-    const readingTime = Math.ceil(words / 400)
+    const readingTime = estimateReadingTime(content)
     return {
       slug,
       title: data.title || '',
@@ -68,8 +68,7 @@ export function getPost(slug: string): Post | null {
     const fullPath = fs.existsSync(mdxPath) ? mdxPath : mdPath
     const fileContents = fs.readFileSync(fullPath, 'utf8')
     const { data, content } = matter(fileContents)
-    const words = content.split(/\s+/).length
-    const readingTime = Math.ceil(words / 400)
+    const readingTime = estimateReadingTime(content)
     return {
       slug,
       title: data.title || '',
