@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">AI画像の著作権と商用利用</title>
+  <desc id="desc">副業で使う前に確認する5つのポイント</desc>
+  <rect width="1200" height="630" fill="#eef4ff"/>
+  <rect x="70" y="66" width="7" height="500" rx="3" fill="#245bce"/>
+  <g font-family="sans-serif" fill="#16315b">
+    <text x="112" y="121" font-size="25" letter-spacing="4">AI TOOL NAVI</text>
+    <text x="112" y="236" font-size="48" font-weight="700">AI画像の</text>
+    <text x="112" y="322" font-size="64" font-weight="700">著作権と商用利用</text>
+    <text x="112" y="429" font-size="32" fill="#405c82">法律・利用規約・販売先のルール</text>
+    <text x="112" y="535" font-size="23" fill="#405c82">公開・販売前のチェック表つき</text>
+    <text x="1085" y="526" text-anchor="end" font-size="148" font-weight="700" fill="#245bce">5</text>
+  </g>
+</svg>
