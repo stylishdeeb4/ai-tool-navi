@@ -10,7 +10,7 @@ export default function Footer() {
           <div>
             <h3 className="text-white font-bold text-lg mb-3">🤖 AIツールナビ</h3>
             <p className="text-sm text-gray-400 leading-relaxed">
-              ChatGPT・Claude・Geminiなど最新AIツールの使い方、比較、料金情報をわかりやすく解説。AIを使いこなして生産性を上げましょう。
+              AIを使った副業の選び方・始め方と、ChatGPT・ClaudeなどのAIツールの使い方を、手順と確認ポイントつきで解説しています。
             </p>
           </div>
           <div>

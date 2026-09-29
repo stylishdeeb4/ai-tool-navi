@@ -2,6 +2,8 @@ import { getAllPosts } from '@/lib/posts'
 import { categories } from '@/lib/categories'
 import ArticleCard from '@/components/ArticleCard'
 import AdBanner from '@/components/AdBanner'
+import GuideList from '@/components/GuideList'
+import { guides } from '@/lib/guides'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 
@@ -10,14 +12,9 @@ export const metadata: Metadata = {
   description: 'AIツールの比較から記事づくり、副業ブログの始め方まで。目的に合うツールの選び方と、最初の実践に必要な手順を紹介します。',
 }
 
-const startingPoints = [
-  { title: 'AIを選ぶ', description: '目的に合うツールと利用条件を比較する', href: '/blog/ai-tool-osusume-2026' },
-  { title: '記事を書く', description: '下書きから公開前のチェックまで', href: '/blog/ai-blog-koukai-checklist' },
-  { title: '副業を始める', description: 'ブログの準備・費用・運営の流れを知る', href: '/blog/ai-blog-fukugyo-hajimekata' },
-]
-
 export default function Home() {
   const posts = getAllPosts()
+  const postMap = Object.fromEntries(posts.map(post => [post.slug, post]))
   const featured = posts.find(post => post.slug === 'ai-blog-koukai-checklist') || posts[0]
   const recent = posts.filter(post => post.slug !== featured?.slug)
     .sort((a, b) => new Date(b.updated || b.date).getTime() - new Date(a.updated || a.date).getTime())
@@ -26,7 +23,7 @@ export default function Home() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
       <section className="rounded-2xl bg-blue-50 border border-blue-100 px-6 py-10 md:p-12 mb-10">
-        <p className="text-sm font-medium text-blue-700 mb-4">はじめてのAI活用ガイド</p>
+        <p className="text-sm font-medium text-blue-700 mb-4">AIで始める副業と、ツールの使い方</p>
         <h1 className="text-3xl md:text-5xl font-bold text-gray-900 leading-snug mb-5">
           AIを選ぶ。使う。<br /><span className="text-blue-700">仕事に活かす。</span>
         </h1>
@@ -34,17 +31,9 @@ export default function Home() {
       </section>
 
       <section aria-labelledby="start-heading" className="mb-10">
-        <h2 id="start-heading" className="text-xl text-gray-900 mb-5">今日は、何を始めますか？</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {startingPoints.map((item, index) => (
-            <Link key={item.href} href={item.href} className="group bg-white border border-gray-200 rounded-xl p-6 hover:border-blue-400 hover:shadow-md transition-all">
-              <span className="text-sm text-blue-700" aria-hidden="true">0{index + 1}</span>
-              <h3 className="text-xl text-gray-900 mt-3 mb-2 group-hover:text-blue-700">{item.title}</h3>
-              <p className="text-sm text-gray-600 leading-6">{item.description}</p>
-              <span aria-hidden="true" className="block text-blue-700 mt-4">→</span>
-            </Link>
-          ))}
-        </div>
+        <h2 id="start-heading" className="text-xl text-gray-900 mb-2">目的から探す</h2>
+        <p className="text-sm text-gray-600 mb-5">やりたいことに合わせて、上から順に読むと必要な準備がそろいます。</p>
+        <GuideList guides={guides} posts={postMap} />
       </section>
 
       {featured && (

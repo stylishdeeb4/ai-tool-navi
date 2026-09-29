@@ -15,10 +15,10 @@ const ADSENSE_ID = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || 'ca-pub-86694807
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} | 最新AIツールの使い方・比較・レビュー`,
+    default: `${SITE_NAME} | AIで始める副業と、AIツールの使い方`,
     template: `%s | ${SITE_NAME}`,
   },
-  description: 'ChatGPT・Claude・Gemini・Midjourney など最新AIツールの使い方、料金、比較をわかりやすく解説。AIを使いこなして作業効率を劇的に上げましょう。',
+  description: 'AIを使った副業の選び方・始め方と、ChatGPT・Claudeなどのツールの使い方を、手順と確認ポイントつきで解説。ブログ・ライティング・画像づくりの実践から、税金や規約の注意点までまとめています。',
   keywords: ['AIツール', 'ChatGPT 使い方', 'Claude 使い方', '画像生成AI', 'AI比較', 'AIツール おすすめ'],
   authors: [{ name: SITE_NAME }],
   creator: SITE_NAME,
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     locale: 'ja_JP',
     url: SITE_URL,
     siteName: SITE_NAME,
-    title: `${SITE_NAME} | 最新AIツールの使い方・比較・レビュー`,
+    title: `${SITE_NAME} | AIで始める副業と、AIツールの使い方`,
     description: 'ChatGPT・Claude・Geminiなど最新AIツールの使い方・料金・比較をわかりやすく解説。',
   },
   twitter: {

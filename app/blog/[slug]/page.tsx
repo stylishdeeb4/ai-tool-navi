@@ -1,4 +1,4 @@
-import { getAllPostSlugs, getPost, getAllPosts } from '@/lib/posts'
+import { getAllPostSlugs, getPost, getAllPosts, getRelatedPosts } from '@/lib/posts'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -6,6 +6,8 @@ import ArticleCard from '@/components/ArticleCard'
 import AdBanner from '@/components/AdBanner'
 import { renderMarkdown } from '@/lib/markdown'
 import { categoryHref } from '@/lib/categories'
+import { guidesForPost } from '@/lib/guides'
+import GuideNav from '@/components/GuideNav'
 
 interface Props {
   params: { slug: string }
@@ -52,9 +54,12 @@ export default async function ArticlePage({ params }: Props) {
 
   const { html: contentHtml, headings } = await renderMarkdown(post.content)
   const allPosts = getAllPosts()
-  const related = allPosts
-    .filter(p => p.slug !== post.slug && p.category === post.category)
-    .slice(0, 3)
+  const postMap = Object.fromEntries(allPosts.map(p => [p.slug, p]))
+  const relatedAll = getRelatedPosts(post, allPosts, 6)
+  const related = relatedAll.slice(0, 3)
+  const moreRelated = relatedAll.slice(3)
+  const postGuides = guidesForPost(post.slug)
+  const categoryUrl = new URL(categoryHref(post.category), SITE_URL).href
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -75,7 +80,7 @@ export default async function ArticlePage({ params }: Props) {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'ホーム', item: SITE_URL },
-      { '@type': 'ListItem', position: 2, name: '記事一覧', item: `${SITE_URL}/blog` },
+      { '@type': 'ListItem', position: 2, name: post.category, item: categoryUrl },
       { '@type': 'ListItem', position: 3, name: post.title, item: `${SITE_URL}/blog/${post.slug}` },
     ],
   }
@@ -90,7 +95,7 @@ export default async function ArticlePage({ params }: Props) {
           <nav className="text-xs text-gray-400 mb-4 flex items-center gap-1">
             <Link href="/" className="hover:text-blue-500">ホーム</Link>
             <span>/</span>
-            <Link href="/blog" className="hover:text-blue-500">記事一覧</Link>
+            <Link href={categoryHref(post.category)} className="hover:text-blue-500">{post.category}</Link>
             <span>/</span>
             <span className="text-gray-600 truncate">{post.title}</span>
           </nav>
@@ -142,6 +147,10 @@ export default async function ArticlePage({ params }: Props) {
             </div>
           )}
 
+          {postGuides.map(({ guide, index }) => (
+            <GuideNav key={guide.id} guide={guide} index={index} posts={postMap} />
+          ))}
+
           <AdBanner slot="ARTICLE_BOTTOM" format="rectangle" className="mt-8" />
         </article>
 
@@ -166,11 +175,11 @@ export default async function ArticlePage({ params }: Props) {
         </aside>
       </div>
 
-      {related.length > 0 && (
+      {moreRelated.length > 0 && (
         <section className="mt-12">
-          <h2 className="text-lg font-bold text-gray-800 mb-4">同じカテゴリの記事</h2>
+          <h2 className="text-lg font-bold text-gray-800 mb-4">あわせて読みたい記事</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {related.map(p => <ArticleCard key={p.slug} post={p} />)}
+            {moreRelated.map(p => <ArticleCard key={p.slug} post={p} />)}
           </div>
         </section>
       )}

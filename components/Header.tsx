@@ -14,7 +14,7 @@ export default function Header() {
             <span className="text-2xl">🤖</span>
             <div>
               <span className="text-lg font-bold text-blue-700">AIツールナビ</span>
-              <span className="hidden sm:block text-xs text-gray-500">最新AIツールの使い方・比較サイト</span>
+              <span className="hidden sm:block text-xs text-gray-500">AIで始める副業とツールの使い方</span>
             </div>
           </Link>
 
