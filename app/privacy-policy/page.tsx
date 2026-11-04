@@ -11,7 +11,7 @@ export default function PrivacyPolicyPage() {
     <div className="max-w-3xl mx-auto px-4 py-12">
       <h1 className="text-3xl font-bold mb-8">プライバシーポリシー</h1>
 
-      <p className="text-gray-600 mb-8">最終更新日：2026年6月16日</p>
+      <p className="text-gray-600 mb-8">最終更新日：2026年11月4日</p>
 
       <section className="mb-8">
         <h2 className="text-xl font-bold mb-4">1. 基本方針</h2>
@@ -67,8 +67,10 @@ export default function PrivacyPolicyPage() {
       <section className="mb-8">
         <h2 className="text-xl font-bold mb-4">6. アフィリエイトについて</h2>
         <p className="text-gray-700 leading-relaxed">
-          当サイトは、Amazon.co.jpをはじめとするアフィリエイトプログラムに参加しています。
-          当サイトを経由して商品を購入された場合、紹介料を受け取ることがあります。
+          当サイトは、A8.netなどのアフィリエイトプログラムに参加しています。
+          広告リンクを経由して申込みや購入が成立した場合、紹介料を受け取ることがあります。
+          広告リンクのクリック先では、成果を計測するためにCookieが使用される場合があります。
+          詳しくは<a href="https://www.a8.net/privacy.html" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">A8.netのプライバシーについて</a>をご確認ください。
         </p>
       </section>
 
