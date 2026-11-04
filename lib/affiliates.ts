@@ -38,19 +38,19 @@ export const affiliates: Record<string, AffiliateOffer> = {
     url: '', // ← A8等で発行した ConoHa WING のリンクを貼る
   },
   xserver: {
-    eyebrow: 'おすすめレンタルサーバー',
+    eyebrow: '比較候補のレンタルサーバー',
     name: 'エックスサーバー',
-    catch: '国内シェアトップクラスの安定性。WordPressクイックスタートで簡単に始められます。',
+    catch: 'WordPressクイックスタートでは、ドメイン取得・SSL設定・WordPressの新規設置をまとめて申し込めます。',
     button: 'エックスサーバーを見てみる',
-    note: '※契約期間・更新料金・サポート条件を公式サイトで確認してください',
+    note: '※クイックスタートは申込時に支払いが発生し、10日間の無料お試しは使えません。契約条件を確認してください。',
     url: 'https://px.a8.net/svt/ejp?a8mat=4B62OE+FKUCMQ+CO4+61C2Q',
   },
   mixhost: {
-    eyebrow: 'おすすめレンタルサーバー',
+    eyebrow: '比較候補のレンタルサーバー',
     name: 'mixhost（ミックスホスト）',
-    catch: '高速表示に定評があるWordPress向けサーバー。WordPressクイックスタートで申し込みと同時にブログを開設できます。',
+    catch: 'WordPressのクイックインストールに対応。スタンダードプランは自動バックアップを14日間保持します。',
     button: 'mixhostを見てみる',
-    note: '※必要な機能と契約・更新時の費用を公式サイトで確認してください',
+    note: '※初回割引は最初の支払期間のみです。ライトプランには自動バックアップがありません。',
     url: 'https://px.a8.net/svt/ejp?a8mat=3HQV6B+3KMEQ+3JTE+5YJRM',
   },
   // クラウドソーシング（ライティング副業の案件獲得）
@@ -160,7 +160,7 @@ export function renderAffiliateBox(key: string): string {
   const eyebrow = `<div style="font-size:12px;font-weight:700;color:#0ea5e9;letter-spacing:.04em;margin-bottom:6px;">${o.eyebrow}</div>`
   const name = `<div style="font-size:18px;font-weight:800;color:#0f172a;margin-bottom:8px;">${o.name}</div>`
   const desc = `<div style="font-size:14px;line-height:1.7;color:#334155;margin-bottom:16px;">${o.catch}</div>`
-  const note = o.note ? `<div style="font-size:12px;color:#94a3b8;margin-top:10px;">${o.note}</div>` : ''
+  const note = o.note ? `<div style="font-size:12px;color:#475569;margin-top:10px;">${o.note}</div>` : ''
 
   const cta = o.url
     ? `<a href="${o.url}" target="_blank" rel="sponsored nofollow noopener" style="display:inline-block;background:#10b981;color:#fff;font-weight:700;font-size:15px;text-decoration:none;padding:12px 28px;border-radius:9999px;">${o.button} →</a>`
