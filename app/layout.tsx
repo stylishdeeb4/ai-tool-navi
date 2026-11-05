@@ -11,14 +11,16 @@ const inter = Inter({ subsets: ['latin'] })
 const SITE_NAME = 'AIツールナビ'
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://hukugyou.blog'
 const ADSENSE_ID = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || 'ca-pub-8669480770000631'
+const SITE_TITLE = `${SITE_NAME} | AIの使い方・比較と副業ブログの始め方`
+const SITE_DESCRIPTION = 'AIツールの選び方や使い方、記事づくりの確認手順、副業ブログの準備と運営を初心者向けに紹介します。'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} | 最新AIツールの使い方・比較・レビュー`,
+    default: SITE_TITLE,
     template: `%s | ${SITE_NAME}`,
   },
-  description: 'ChatGPT・Claude・Gemini・Midjourney など最新AIツールの使い方、料金、比較をわかりやすく解説。AIを使いこなして作業効率を劇的に上げましょう。',
+  description: SITE_DESCRIPTION,
   keywords: ['AIツール', 'ChatGPT 使い方', 'Claude 使い方', '画像生成AI', 'AI比較', 'AIツール おすすめ'],
   authors: [{ name: SITE_NAME }],
   creator: SITE_NAME,
@@ -28,13 +30,13 @@ export const metadata: Metadata = {
     locale: 'ja_JP',
     url: SITE_URL,
     siteName: SITE_NAME,
-    title: `${SITE_NAME} | 最新AIツールの使い方・比較・レビュー`,
-    description: 'ChatGPT・Claude・Geminiなど最新AIツールの使い方・料金・比較をわかりやすく解説。',
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
   },
   twitter: {
     card: 'summary_large_image',
     title: SITE_NAME,
-    description: 'ChatGPT・Claude・Geminiなど最新AIツールの使い方・料金・比較をわかりやすく解説。',
+    description: SITE_DESCRIPTION,
   },
   robots: {
     index: true,

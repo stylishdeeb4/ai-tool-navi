@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   alternates: { canonical: '/privacy-policy' },
-  title: 'プライバシーポリシー | AIツールナビ',
+  title: 'プライバシーポリシー',
   description: 'AIツールナビのプライバシーポリシーページです。',
 }
 
