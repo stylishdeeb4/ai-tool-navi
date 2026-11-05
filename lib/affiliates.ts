@@ -71,11 +71,11 @@ export const affiliates: Record<string, AffiliateOffer> = {
     url: '', // ← ランサーズのリンクを貼る
   },
   coconala: {
-    eyebrow: 'おすすめスキルマーケット',
+    eyebrow: '制作を依頼する場合の比較先',
     name: 'ココナラ',
-    catch: '自分の得意（ライティング・デザイン・相談など）を出品して売れる国内最大級のスキルマーケット。在宅・スキマ時間で始められます。',
-    button: 'ココナラに無料登録',
-    note: '※登録・出品は無料。AIで作った成果物の販売にも',
+    catch: 'Kindle本の表紙制作を依頼する場合は、出品内容や制作例、費用、修正条件を比較してください。',
+    button: '表紙制作の依頼先を探す',
+    note: '※依頼前に料金・納期・利用範囲を確認してください。',
     url: 'https://px.a8.net/svt/ejp?a8mat=453CBX+3K07UA+2PEO+OE4NM',
   },
   // WordPressテーマ（ブログのデザイン・収益化を底上げ）

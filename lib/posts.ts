@@ -33,8 +33,8 @@ export function getAllPosts(): PostMeta[] {
   const slugs = getAllPostSlugs()
   return slugs
     .map(slug => getPostMeta(slug))
-    .filter(Boolean)
-    .sort((a, b) => new Date(b!.date).getTime() - new Date(a!.date).getTime()) as PostMeta[]
+    .filter((post): post is PostMeta => post !== null)
+    .sort((a, b) => new Date(b.updated || b.date).getTime() - new Date(a.updated || a.date).getTime())
 }
 
 export function getPostMeta(slug: string): PostMeta | null {

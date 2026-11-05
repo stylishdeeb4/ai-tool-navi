@@ -11,9 +11,9 @@ export const metadata: Metadata = {
 }
 
 const startingPoints = [
-  { title: 'AIを選ぶ', description: '目的に合うツールと利用条件を比較する', href: '/blog/ai-tool-osusume-2026' },
+  { title: '副業ブログを始める', description: '準備・費用・サーバーの選び方を確認する', href: '/blog/ai-blog-fukugyo-hajimekata' },
   { title: '記事を書く', description: '下書きから公開前のチェックまで', href: '/blog/ai-blog-koukai-checklist' },
-  { title: '副業を始める', description: 'ブログの準備・費用・運営の流れを知る', href: '/blog/ai-blog-fukugyo-hajimekata' },
+  { title: 'AIを選ぶ', description: '目的に合うツールと利用条件を比較する', href: '/blog/ai-tool-osusume-2026' },
 ]
 
 export default function Home() {
