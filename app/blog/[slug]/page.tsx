@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import ArticleCard from '@/components/ArticleCard'
 import AdBanner from '@/components/AdBanner'
+import HostingCostCalculator from '@/components/HostingCostCalculator'
 import { renderMarkdown } from '@/lib/markdown'
 import { categoryHref } from '@/lib/categories'
 
@@ -51,6 +52,10 @@ export default async function ArticlePage({ params }: Props) {
   const coverImage = post.image || `/api/og?title=${encodeURIComponent(post.title)}&category=${encodeURIComponent(post.category)}`
 
   const { html: contentHtml, headings } = await renderMarkdown(post.content)
+  const toolMarker = '<p>{{TOOL:hosting-cost}}</p>'
+  const toolIndex = post.slug === 'ai-blog-fukugyo-hajimekata' ? contentHtml.indexOf(toolMarker) : -1
+  const contentBeforeTool = toolIndex === -1 ? contentHtml : contentHtml.slice(0, toolIndex)
+  const contentAfterTool = toolIndex === -1 ? '' : contentHtml.slice(toolIndex + toolMarker.length)
   const allPosts = getAllPosts()
   const related = allPosts
     .filter(p => p.slug !== post.slug && p.category === post.category)
@@ -132,7 +137,9 @@ export default async function ArticlePage({ params }: Props) {
               </ol>
             </nav>
           )}
-          <div className="prose-article" dangerouslySetInnerHTML={{ __html: contentHtml }} />
+          <div className="prose-article" dangerouslySetInnerHTML={{ __html: contentBeforeTool }} />
+          {toolIndex !== -1 && <HostingCostCalculator />}
+          {toolIndex !== -1 && <div className="prose-article" dangerouslySetInnerHTML={{ __html: contentAfterTool }} />}
 
           {post.tags.length > 0 && (
             <div className="mt-8 pt-6 border-t border-gray-100">
