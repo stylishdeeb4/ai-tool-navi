@@ -32,7 +32,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="border-t border-gray-700 pt-6 text-center text-sm text-gray-500">
-          <p>当サイトはAmazonアソシエイト・Google AdSenseに参加しています。</p>
+          <p>当サイトではA8.netなどのアフィリエイト広告を利用しています。</p>
           <p className="mt-1">© {year} AIツールナビ All Rights Reserved.</p>
         </div>
       </div>

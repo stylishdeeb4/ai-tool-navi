@@ -19,18 +19,6 @@ export interface Guide {
 
 export const guides: Guide[] = [
   {
-    id: 'fukugyo-start',
-    title: 'AI副業を安全に始める',
-    description: '怪しい案件を避け、自分に合う副業を選び、税金まで確認する',
-    categories: ['fukugyo', 'chatgpt'],
-    steps: [
-      { slug: 'ai-fukugyo-ayashii-anzen', label: '危険な副業を見分ける' },
-      { slug: 'ai-fukugyo-osusume-15', label: '自分に合う副業を選ぶ' },
-      { slug: 'chatgpt-fukugyo-hajimekata', label: 'ChatGPTで始める手順' },
-      { slug: 'ai-fukugyo-kakutei-shinkoku', label: '税金と確定申告を確認する' },
-    ],
-  },
-  {
     id: 'blog',
     title: 'AIでブログを育てる',
     description: '開設の準備から、記事の品質確認、画像づくり、収益化まで',
@@ -41,6 +29,18 @@ export const guides: Guide[] = [
       { slug: 'gazou-seisei-ai-prompt-kakikata', label: 'アイキャッチ画像を作る' },
       { slug: 'ai-gazou-chosakuken-shoyo', label: '画像の権利と規約を確認する' },
       { slug: 'ai-affiliate-marketing-2025', label: 'アフィリエイトで収益化する' },
+    ],
+  },
+  {
+    id: 'fukugyo-start',
+    title: 'AI副業を安全に始める',
+    description: '怪しい案件を避け、自分に合う副業を選び、税金まで確認する',
+    categories: ['fukugyo', 'chatgpt'],
+    steps: [
+      { slug: 'ai-fukugyo-ayashii-anzen', label: '危険な副業を見分ける' },
+      { slug: 'ai-fukugyo-osusume-15', label: '自分に合う副業を選ぶ' },
+      { slug: 'chatgpt-fukugyo-hajimekata', label: 'ChatGPTで始める手順' },
+      { slug: 'ai-fukugyo-kakutei-shinkoku', label: '税金と確定申告を確認する' },
     ],
   },
   {

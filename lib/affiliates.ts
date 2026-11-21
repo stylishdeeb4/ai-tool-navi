@@ -38,19 +38,19 @@ export const affiliates: Record<string, AffiliateOffer> = {
     url: '', // ← A8等で発行した ConoHa WING のリンクを貼る
   },
   xserver: {
-    eyebrow: 'おすすめレンタルサーバー',
+    eyebrow: '比較候補のレンタルサーバー',
     name: 'エックスサーバー',
-    catch: '国内シェアトップクラスの安定性。WordPressクイックスタートで簡単に始められます。',
-    button: 'エックスサーバーを見てみる',
-    note: '※契約期間・更新料金・サポート条件を公式サイトで確認してください',
+    catch: 'WordPressクイックスタートでは、ドメイン取得・SSL設定・WordPressの新規設置をまとめて申し込めます。',
+    button: '申込前に試用・支払条件を確認',
+    note: '※クイックスタートは申込時に支払いが発生し、10日間の無料お試しは使えません。契約条件を確認してください。',
     url: 'https://px.a8.net/svt/ejp?a8mat=4B62OE+FKUCMQ+CO4+61C2Q',
   },
   mixhost: {
-    eyebrow: 'おすすめレンタルサーバー',
+    eyebrow: '比較候補のレンタルサーバー',
     name: 'mixhost（ミックスホスト）',
-    catch: '高速表示に定評があるWordPress向けサーバー。WordPressクイックスタートで申し込みと同時にブログを開設できます。',
-    button: 'mixhostを見てみる',
-    note: '※必要な機能と契約・更新時の費用を公式サイトで確認してください',
+    catch: 'WordPressのクイックインストールに対応。スタンダードプランは自動バックアップを14日間保持します。',
+    button: '初回・更新時の費用を確認',
+    note: '※初回割引は最初の支払期間のみです。ライトプランには自動バックアップがありません。',
     url: 'https://px.a8.net/svt/ejp?a8mat=3HQV6B+3KMEQ+3JTE+5YJRM',
   },
   // クラウドソーシング（ライティング副業の案件獲得）
@@ -71,11 +71,11 @@ export const affiliates: Record<string, AffiliateOffer> = {
     url: '', // ← ランサーズのリンクを貼る
   },
   coconala: {
-    eyebrow: 'おすすめスキルマーケット',
+    eyebrow: '制作を依頼する場合の比較先',
     name: 'ココナラ',
-    catch: '自分の得意（ライティング・デザイン・相談など）を出品して売れる国内最大級のスキルマーケット。在宅・スキマ時間で始められます。',
-    button: 'ココナラに無料登録',
-    note: '※登録・出品は無料。AIで作った成果物の販売にも',
+    catch: 'Kindle本の表紙制作を依頼する場合は、出品内容や制作例、費用、修正条件を比較してください。',
+    button: '表紙制作の依頼先を探す',
+    note: '※依頼前に料金・納期・利用範囲を確認してください。',
     url: 'https://px.a8.net/svt/ejp?a8mat=453CBX+3K07UA+2PEO+OE4NM',
   },
   // WordPressテーマ（ブログのデザイン・収益化を底上げ）
@@ -160,7 +160,7 @@ export function renderAffiliateBox(key: string): string {
   const eyebrow = `<div style="font-size:12px;font-weight:700;color:#0ea5e9;letter-spacing:.04em;margin-bottom:6px;">${o.eyebrow}</div>`
   const name = `<div style="font-size:18px;font-weight:800;color:#0f172a;margin-bottom:8px;">${o.name}</div>`
   const desc = `<div style="font-size:14px;line-height:1.7;color:#334155;margin-bottom:16px;">${o.catch}</div>`
-  const note = o.note ? `<div style="font-size:12px;color:#94a3b8;margin-top:10px;">${o.note}</div>` : ''
+  const note = o.note ? `<div style="font-size:12px;color:#475569;margin-top:10px;">${o.note}</div>` : ''
 
   const cta = o.url
     ? `<a href="${o.url}" target="_blank" rel="sponsored nofollow noopener" style="display:inline-block;background:#10b981;color:#fff;font-weight:700;font-size:15px;text-decoration:none;padding:12px 28px;border-radius:9999px;">${o.button} →</a>`

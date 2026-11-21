@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import ArticleCard from '@/components/ArticleCard'
 import AdBanner from '@/components/AdBanner'
+import HostingCostCalculator from '@/components/HostingCostCalculator'
 import { renderMarkdown } from '@/lib/markdown'
 import { categoryHref } from '@/lib/categories'
 import { guidesForPost } from '@/lib/guides'
@@ -53,6 +54,10 @@ export default async function ArticlePage({ params }: Props) {
   const coverImage = post.image || `/api/og?title=${encodeURIComponent(post.title)}&category=${encodeURIComponent(post.category)}`
 
   const { html: contentHtml, headings } = await renderMarkdown(post.content)
+  const toolMarker = '<p>{{TOOL:hosting-cost}}</p>'
+  const toolIndex = post.slug === 'ai-blog-fukugyo-hajimekata' ? contentHtml.indexOf(toolMarker) : -1
+  const contentBeforeTool = toolIndex === -1 ? contentHtml : contentHtml.slice(0, toolIndex)
+  const contentAfterTool = toolIndex === -1 ? '' : contentHtml.slice(toolIndex + toolMarker.length)
   const allPosts = getAllPosts()
   const postMap = Object.fromEntries(allPosts.map(p => [p.slug, p]))
   const relatedAll = getRelatedPosts(post, allPosts, 6)
@@ -109,6 +114,10 @@ export default async function ArticlePage({ params }: Props) {
 
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 leading-tight">{post.title}</h1>
 
+          <p className="mb-4 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-medium leading-6 text-gray-800">
+            PR｜当サイトは広告・アフィリエイトプログラムを利用しています。記事内のリンクから申し込みがあると、報酬を受け取る場合があります。
+          </p>
+
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-400 mb-6 pb-4 border-b border-gray-100">
             <Link href="/about" className="flex items-center gap-1.5 hover:text-blue-500">
               <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-600 text-[10px] font-bold">AI</span>
@@ -125,8 +134,6 @@ export default async function ArticlePage({ params }: Props) {
 
           <AdBanner slot="ARTICLE_TOP" format="horizontal" className="mb-8" />
 
-          {post.content.includes('{{AFF:') && <p className="text-sm text-gray-600 mb-5">この記事には広告・アフィリエイトリンクが含まれます。</p>}
-
           {headings.length > 1 && (
             <nav aria-label="この記事の目次" className="bg-white border border-gray-200 rounded-xl p-5 mb-8">
               <h2 className="text-base mb-3">この記事でわかること</h2>
@@ -135,7 +142,9 @@ export default async function ArticlePage({ params }: Props) {
               </ol>
             </nav>
           )}
-          <div className="prose-article" dangerouslySetInnerHTML={{ __html: contentHtml }} />
+          <div className="prose-article" dangerouslySetInnerHTML={{ __html: contentBeforeTool }} />
+          {toolIndex !== -1 && <HostingCostCalculator />}
+          {toolIndex !== -1 && <div className="prose-article" dangerouslySetInnerHTML={{ __html: contentAfterTool }} />}
 
           {post.tags.length > 0 && (
             <div className="mt-8 pt-6 border-t border-gray-100">

@@ -14,8 +14,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }))
 
   return [
-    { url: SITE_URL, lastModified: new Date(), changeFrequency: 'daily', priority: 1 },
-    { url: `${SITE_URL}/blog`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
+    { url: SITE_URL, changeFrequency: 'daily', priority: 1 },
+    { url: `${SITE_URL}/blog`, changeFrequency: 'daily', priority: 0.9 },
     ...categories.map(category => {
       const latest = posts
         .filter(post => post.category === category.name)
@@ -27,8 +27,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: 0.7,
       }
     }),
-    { url: `${SITE_URL}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
-    { url: `${SITE_URL}/privacy-policy`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.3 },
+    { url: `${SITE_URL}/about`, changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${SITE_URL}/privacy-policy`, changeFrequency: 'monthly', priority: 0.3 },
     ...postUrls,
   ]
 }

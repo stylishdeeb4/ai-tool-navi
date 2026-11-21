@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   alternates: { canonical: '/contact' },
-  title: 'お問い合わせ | AIツールナビ',
+  title: 'お問い合わせ',
   description: 'AIツールナビへのお問い合わせはこちらから。',
 }
 

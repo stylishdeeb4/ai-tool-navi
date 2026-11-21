@@ -23,7 +23,7 @@
 6. **似たテーマの記事が競合している**：
    - `claude-vs-chatgpt-hikaku-2025` と `chatgpt-claude-fukugyo-hikaku`（ChatGPTとClaudeの比較）
    - `ai-affiliate-marketing-2025` と `ai-blog-fukugyo-hajimekata`（ブログで稼ぐ）
-7. **収益化の未設定**：AdSenseの広告枠IDが仮の値（`ARTICLE_TOP` など）のため、本番では広告が出ていない。アフィリエイトも ConoHa・クラウドワークス・ランサーズ・Canvaなどのリンクが未設定。
+7. **収益化の未設定**：AdSenseの広告枠IDが仮の値（`ARTICLE_TOP` など）のため、本番では広告が出ていない。アフィリエイトも ConoHa WING・クラウドワークス・ランサーズ・Canva Proなど10件のリンクが未設定（2026年11月時点）。
 
 ## 2. 今回実装した構造（コード）
 
@@ -35,7 +35,7 @@
 | カテゴリページのハブ化 | `app/category/[category]/page.tsx`, `lib/categories.ts` | 紹介文、「まず読みたい記事」、ガイド、CollectionPageの構造化データを追加 |
 | 関連記事のスコアリング | `lib/posts.ts` の `getRelatedPosts` | frontmatterの `related`、同じガイド、共通タグ、同じカテゴリの順に重み付け |
 | パンくずをカテゴリ経由に | `app/blog/[slug]/page.tsx` | テーマのまとまりを検索エンジンに伝える |
-| 打ち出し方の統一 | `app/layout.tsx`, `Header.tsx`, `Footer.tsx` | 「AIで始める副業と、AIツールの使い方」に統一 |
+| 打ち出し方の統一 | `Header.tsx`, `Footer.tsx`（サイトタイトルは main の「AIの使い方・比較と副業ブログの始め方」を採用） | ヘッダー・フッターの説明を副業寄りにそろえる |
 | テスト | `tests/site-structure.test.mjs`, `scripts/verify-site.mjs` | ガイドやカテゴリの設定ミス（存在しない記事など）をCIで検出する |
 
 ## 3. 記事を追加するときの手順
@@ -80,9 +80,8 @@
 ## 5. 収益化の設定（運営者の作業）
 
 - **AdSense**：管理画面で広告ユニットを作成し、`AdBanner` の `slot` に数値のIDを設定する。これをしないと広告は表示されない。
-- **アフィリエイト**：`lib/affiliates.ts` で `url` が空の案件（ConoHa WING、クラウドワークス、ランサーズ、Canva Pro、TechAcademyなど）を提携して埋める。
+- **アフィリエイト**：`lib/affiliates.ts` で `url` が空の10件（ConoHa WING、クラウドワークス、ランサーズ、Canva Pro、Adobe CC、TechAcademy、デイトラ、SHIFT AI、studio US、Writing Hacks）を提携して埋める。
 - **収益に近い記事への案件追加**：確定申告の記事（`ai-fukugyo-kakutei-shinkoku`）は、会計ソフトの案件と相性がよい。提携できたら `affiliates.ts` に追加し、記事に `{{AFF:キー}}` を置く。
-- **フッターの表記**：「Amazonアソシエイトに参加しています」と書かれているが、記事内にAmazonのリンクは見当たらない。参加していない場合は表記を削除する。
 
 ## 6. 信頼性（E-E-A-T）
 

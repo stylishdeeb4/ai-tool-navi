@@ -17,6 +17,7 @@ for (const slug of ['chatgpt', 'claude', 'image-ai', 'video-ai', 'fukugyo', 'rev
 const newPath = '/blog/ai-blog-koukai-checklist'
 const article = await page(newPath)
 assert.equal((article.match(/<h1(?:\s|>)/g) || []).length, 1, 'Article has one H1')
+assert.ok(article.includes('PR｜当サイトは広告・アフィリエイトプログラムを利用しています'), 'Non-token article has a visible PR notice')
 assert.ok(article.includes(`rel="canonical" href="https://hukugyou.blog${newPath}"`))
 assert.ok(article.includes('class="article-table"'), 'Tables have a scrollable wrapper')
 assert.ok(article.includes('<pre>'), 'Prompt renders as a code block')
@@ -32,7 +33,7 @@ await page('/images/ai-blog-koukai-checklist.png')
 const revised = await page('/blog/ai-blog-fukugyo-hajimekata')
 assert.ok(revised.includes(`href="${newPath}"`), 'Revised article links to the checklist')
 assert.ok(!revised.includes('3〜6ヶ月'), 'Unsupported income timeline was removed')
-assert.ok(revised.includes('広告・アフィリエイトリンクが含まれます'))
+assert.ok(revised.includes('PR｜当サイトは広告・アフィリエイトプログラムを利用しています'))
 assert.ok(revised.includes('rel="sponsored nofollow noopener"'))
 assert.ok(!revised.includes('**需要'), 'Raw emphasis markers do not appear')
 
